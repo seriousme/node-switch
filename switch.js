@@ -1,5 +1,5 @@
 
-ls=require('./lightswitch');
+var ls=require('./lightswitch');
 
 var state={
     "auto":"on",
@@ -18,13 +18,13 @@ function handlePower(q,c){
 	if (! q.cmd) return;
 	c="ip" + c;
 	if (q.cmd == "on"){
-		if (Object.keys(state.power).length == 0)
+		if (Object.keys(state.power).length === 0)
 			ls.switch('power',q.cmd);
 		state.power[c]="active";
 	}
 	if (q.cmd == "off"){
 		delete(state.power[c]);
-		if (Object.keys(state.power).length == 0)
+		if (Object.keys(state.power).length === 0)
 			ls.switch('power',q.cmd);
 	}
 	if (q.cmd == "del"){
@@ -36,9 +36,9 @@ function handlePower(q,c){
 function handleState(q){
 	if (! q) return;
 	Object.keys(q).forEach(function(key) {
-  		var val = q[key];
+        var val = q[key];
 		if (! statevals[val]) return;
-  		if (state[key] !== val){
+        if (state[key] !== val){
 			ls.switch(key,val);
 			state[key] = val;
 		}
