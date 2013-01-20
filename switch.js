@@ -9,9 +9,9 @@ var state={
     "device4":"off",
     "device5":"off",
 	"power":{}
-}
+};
 
-var statevals={"on":"1","off":"0"}
+var statevals={"on":"1","off":"0"};
 
 function handlePower(q,c){
 	if (! q) return;
@@ -65,7 +65,7 @@ var app = connect()
   .use(function(req, res){
     res.writeHead(404, {'content-type':'text/plain'}); 
     res.end('404: Page not found\n');
-  })
+  });
 
 http.createServer(app).listen(80);
 
