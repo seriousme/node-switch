@@ -67,7 +67,7 @@ var app = connect()
     res.end('404: Page not found\n');
   });
 
-http.createServer(app).listen(80);
+http.createServer(app).listen(process.env.PORT || 80);
 
 
 
