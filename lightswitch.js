@@ -11,7 +11,7 @@ var switchmap={
 
 exports.switch=function(k,v){
 	if (! switchmap[k]) return;
-	dev=switchmap[k];
+	var dev=switchmap[k];
 	console.log(switchCmd,"-g",dev.group,"-n",dev.device,v);
 	var spawn = require('child_process').spawn,
      lightswitch = spawn(switchCmd, ['-g',dev.group,'-n',dev.device,v]);
