@@ -1,0 +1,21 @@
+{
+  "name": "node-switch",
+  "description": "implementation of a home automation gui",
+  "version": "0.1.0",
+  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seriousme/node-switch.git"
+  },
+  "keywords": [
+    "gui",
+    "lightswitch"
+  ],
+  "dependencies" : {
+    "connect"   :  "2.7.x"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}

@@ -42,8 +42,8 @@ function handleState(q){
 			ls.switch(key,val);
 			state[key] = val;
 		}
-	});	
-	
+	});
+
 }
 
 var connect = require('connect')
@@ -53,7 +53,7 @@ var connect = require('connect')
 var app = connect()
   .use(connect.logger('dev'))
   .use(connect.static('public'))
-  .use(connect.query())  
+  .use(connect.query())
   .use('/cgi-bin/switch',function(req, res){
     handleState(req.query);
     res.end(JSON.stringify(state));
@@ -63,7 +63,7 @@ var app = connect()
     res.end(JSON.stringify(state));
    })
   .use(function(req, res){
-    res.writeHead(404, {'content-type':'text/plain'}); 
+    res.writeHead(404, {'content-type':'text/plain'});
     res.end('404: Page not found\n');
   });
 
