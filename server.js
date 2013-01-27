@@ -67,7 +67,22 @@ var app = connect()
     res.end('404: Page not found\n');
   });
 
-http.createServer(app).listen(process.env.PORT || 80);
+// required for c9.io compatibility
+var host = "localhost";
+var port = 80;
+    
+if (process.env.C9_PID)
+{
+    host=process.env.IP;
+    port=process.env.PORT;
+}
+else
+    console.log("Server is running at","http://"+host+":"+port);
+
+
+http.createServer(app).listen(port,host);
+
+
 
 
 
