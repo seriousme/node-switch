@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1"> 
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <link href="pics/serious-logo.png" rel="apple-touch-icon" />
+  
+  <title>Home Switch</title>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <style type='text/css'>
+ .ui-li-static label {   
+    font-size: 16px;
+    font-weight: normal;
+    vertical-align: top;
+    display: inline-block;
+    margin: 0 2% 0 0;
+    width: 20%;
+    line-height: 1.4;
+}
+.ui-field-contain .ui-slider-switch { width: 9em; }
+.ui-field-contain label { width: 7em; }
+
+  </style>
+  <script type='text/javascript'>//<![CDATA[ 
+$(window).load(function(){
+var busy=false;
+
+function callService(id, value) {
+    var serviceUrl = '/cgi-bin/switch';
+	//var serviceUrl = 'switch.php';
+	//var serviceUrl = 'switchdata.html';
+    var data = {
+        sid: Math.random()
+    };
+	if (id != "auto")
+		id = "device" + id
+    data[id] = value;
+	
+    //$('#ftr').text(serviceUrl + JSON.stringify(data));
+	$.getJSON(serviceUrl, data, function(serviceResponse) {
+        $.each(serviceResponse, function(dev, val) {
+			var cv = $("select#" + dev).val();
+            if (cv && (cv != val)) {
+				busy=true;
+                $("select#" + dev).val(val).change();
+				busy=false;
+            }
+        });
+    }).error(function(obj,str) {
+		$('#ftr').text("error: "+str);
+	});
+}
+
+
+callService();
+$('select').change(function() {
+	if (! busy){
+		callService($(this).attr('data-device'), $(this).val());
+	}
+});
+
+$('button').click(function() {
+    callService($(this).attr('data-device'), $(this).attr('data-value'));
+});
+});//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <div data-role="page" id="home" class="type-home"> 
+    <div  data-role="header"> 
+        <h1>Home Switch</h1> 
+    </div>
+
+    <div data-role="content"> 
+        <div class="content-primary"> 
+            <ul data-role="listview" data-inset2="true">
+                    <li data-role="fieldcontain">
+                        <label for="device1">Light 1</label>
+                        <select name="device1" id="device1" data-role="slider" data-device="1" >
+                            <option value="off">Off</option>
+                            <option value="on">On</option>
+
+                        </select> 
+                    </li>
+                    
+                    <li data-role="fieldcontain">
+                        <label for="device2">Light 2</label>
+                        <select name="device2" id="device2" data-role="slider" data-device="2" >
+                            <option value="off">Off</option>
+                            <option value="on">On</option>
+                        </select> 
+                    </li>
+
+                    
+                    <li data-role="fieldcontain">
+                        <label for="device3">Light 3</label>
+                        <select name="device3" id="device3" data-role="slider" data-device="3" >
+                            <option value="off">Off</option>
+                            <option value="on">On</option>
+                        </select> 
+                    </li>
+                    <li data-role="fieldcontain">
+
+                        <label for="device4">Light 4</label>
+                        <select name="device4" id="device4" data-role="slider" data-device="4" >
+                            <option value="off">Off</option>
+                            <option value="on">On</option>
+                        </select> 
+                    </li>
+                    <li data-role="fieldcontain">
+                        <label for="blinds1">Blinds 1</label>
+
+                        <button id="blinds1down" data-device="6" data-value="on" data-inline="true">Down</button>
+                        <button id="blinds1up" data-device="6" data-value="off" data-inline="true">Up</button>
+                    </li>
+                    <li data-role="fieldcontain" >
+                        <label for="blinds2">Blinds 2</label>
+                        <button id="blinds2down" data-device="7" data-value="on" data-inline="true">Down</button>
+                        <button id="blinds2up" data-device="7" data-value="off" data-inline="true">Up</button>
+
+                    </li>
+                    <li data-role="fieldcontain">
+                        <label for="auto">Automatic</label>
+                        <select name="auto" id="auto" data-role="slider" data-device="auto" >
+                            <option value="off">Off</option>
+                            <option value="on">On</option>
+                        </select> 
+                    </li>
+
+                </ul>
+        </div>
+    </div>
+    <div  data-role="footer"> 
+          <h4 id="ftr"></h4> 
+    </div>
+</div>
+  
+</body>
+
+
+</html>
+
