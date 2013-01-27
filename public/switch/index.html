@@ -20,7 +20,7 @@
     width: 20%;
     line-height: 1.4;
 }
-.ui-field-contain div.ui-slider-switch { width: 9em; }
+.ui-field-contain .ui-slider-switch { width: 9em; }
 .ui-field-contain label { width: 7em; }
 
   </style>
@@ -42,7 +42,7 @@ function callService(id, value) {
     //$('#ftr').text(serviceUrl + JSON.stringify(data));
 	$.getJSON(serviceUrl, data, function(serviceResponse) {
         $.each(serviceResponse, function(dev, val) {
-			cv = $("select#" + dev).val();
+			var cv = $("select#" + dev).val();
             if (cv && (cv != val)) {
 				busy=true;
                 $("select#" + dev).val(val).change();
