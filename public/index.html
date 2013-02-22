@@ -36,10 +36,16 @@ function callService(id, value) {
         sid: Math.random()
     };
 	if (id != "auto")
-		id = "device" + id
+		id = "device" + id;
     data[id] = value;
 	
     //$('#ftr').text(serviceUrl + JSON.stringify(data));
+    $.mobile.loading( 'show',{
+        text: 'Loading..',
+        textVisible: true,
+        textonly: true,
+    });
+
 	$.getJSON(serviceUrl, data, function(serviceResponse) {
         $.each(serviceResponse, function(dev, val) {
 			var cv = $("select#" + dev).val();
@@ -49,9 +55,13 @@ function callService(id, value) {
 				busy=false;
             }
         });
-    }).error(function(obj,str) {
+    })
+    .error(function(obj,str) {
 		$('#ftr').text("error: "+str);
-	});
+	})
+    .complete(function(obj,str){
+-       $.mobile.loading( 'hide');
+    });
 }
 
 
