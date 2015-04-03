@@ -13,6 +13,8 @@ To start:
     npm start
 
     
-The javascript and css in index.html in inlined on purpose to the reduce the number of http roundtrips.
+The javascript and css index.html in inlined on purpose to the reduce the number of http roundtrips.
+
+The GUI can be previewed via https://rawgit.com/seriousme/node-switch/master/public/index.html
 
   
