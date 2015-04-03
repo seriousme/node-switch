@@ -46,43 +46,23 @@ function handleState(query){
 
 }
 
-var connect = require('connect');
-var http = require('http');
-
-
-var app = connect()
-  .use(connect.logger('dev'))
-  .use(connect.static('public'))
-  .use(connect.query())
-  .use('/cgi-bin/switch',function(req, res){
+var port = 8080;
+var staticSite = __dirname + '/public';
+var express = require('express');
+var app = express()
+app.use('/cgi-bin/switch',function(req, res){
     handleState(req.query);
     res.end(JSON.stringify(state));
    })
-   .use('/cgi-bin/power',function(req, res){
+app.use('/cgi-bin/power',function(req, res){
     handlePower(req.query,req.connection.remoteAddress);
     res.end(JSON.stringify(state));
    })
-  .use(function(req, res){
+app.use('/', express.static(staticSite));
+app.use(function(req, res){
     res.writeHead(404, {'content-type':'text/plain'});
     res.end('404: Page not found\n');
   });
 
-
-var host = 'localhost';
-var port = 80;
-
-// required for c9.io testing compatibility
-if (process.env.C9_PID)
-{
-    host=process.env.IP;
-    port=process.env.PORT;
-}
-else
-    console.log('Server is running at','http://'+host+':'+port);
-
-http.createServer(app).listen(port,host);
-
-
-
-
+app.listen(port, function() { console.log('listening')});
 
