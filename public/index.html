@@ -1,201 +1,159 @@
 <!DOCTYPE html>
-<html >
+<html lang="en">
+
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1"> 
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link href="pics/icon-56x56.png" rel="apple-touch-icon" />
-  <link rel="shortcut icon" sizes="196x196" href="pics/icon-196x196.png">
-  
-  <title>Home Switch</title>
-   <link href="ionic/css/ionic.min.css" rel="stylesheet">
-  <style>
-  @media (min-width: 520px) {
-  .ct {
-    width: 520px;
-	margin-left: auto ;
-	margin-right: auto ;
-  }
-}
-  .buttongroup {
-	float: right;
-  }
-  .padding {
-   margin-top: 40px;
-  }
-  
-  </style>
-  <script type='text/javascript'>//<![CDATA[ 
-window.onload = function(){
-var busy=false;
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="pics/icon-56x56.png" rel="apple-touch-icon" />
+    <link rel="shortcut icon" sizes="196x196" href="pics/icon-196x196.png">
 
-function showError(err){
-	var el = document.getElementById('ftr');
-	el.innerHTML = err;
-}
+    <title>Home Switch</title>
 
-function getJSON(url,handler,errHandler){
-	var xhr=new XMLHttpRequest();
-	xhr.responseType="json";
-	xhr.onreadystatechange=function(){
-		if (xhr.readyState==4){
-				if ( xhr.response){
-					handler(xhr.response);
-					}
-				else{
-					errHandler(Error(xhr.statusText));
-				}
-		}
-	}
-	xhr.open("GET",url,true);
-	xhr.send();
-}
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 
-function setState(serviceResponse) {
-	for (var item in serviceResponse){
-		var val = ( serviceResponse[item] === 'on');
-		var el = document.getElementById(item);
-		if (el){
-			var cv = el.checked;
-			if (cv != val) {
-				busy=true;
-				el.click();
-				busy=false;
-			}
-		}
-	}
-}
+    <!-- Bootstrap theme -->
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
-function callService(id, value) {
-    var serviceUrl = '/cgi-bin/switch';
-    var url = serviceUrl + '?sid='+Math.random();
-	if (value){
-	    if (id != "auto"){
-			id = "device" + id;
-		}
-		url = url + '&' + id + '=' + value;
-	}
-    //showError(url);
-	getJSON(url, setState, showError );
-}
-
-
-callService();
-
-var inputs = document.getElementsByTagName("input");
-for (var i=0; i < inputs.length; i++){
-	var inp = inputs[i];
-	inp.onchange=function(){ 
-		if (! busy){
-			callService(this.getAttribute('data-device'), this.checked ? "on" : "off");
-		}
-	};
-}
-var buttons = document.getElementsByTagName("button");
-for (var j=0; j < buttons.length; j++){
-	var bt = buttons[j];
-	bt.onclick = function(){ 
-		if (! busy){
-			callService(this.getAttribute('data-device'), this.getAttribute('data-value'));
-		}
-	};
-}
-};//]]>  
-
-</script>
-
-
+    <!-- Custom styles for this template -->
+    <link href="css/starter-template.css" rel="stylesheet">
 </head>
-<body>
-  <div class="ct bar bar-header bar-positive">
-    <h1 class="title">
-      Home Switch
-    </h1>
-  </div>
-  
-  <div class="ct ion-content has-header has-footer">
-	<div class="padding">
-    <ul class="list">
-      <li class="item item-toggle">
-        Light 1
-        <label class="toggle toggle-positive">
-          <input type="checkbox" id="device1" data-device="1">
-          <div class="track">
-            <div class="handle">
-            </div>
-          </div>
-        </label>
-      </li>
-      <li class="item item-toggle">
-        Light 2
-        <label class="toggle toggle-positive">
-          <input type="checkbox" id="device2" data-device="2">
-          <div class="track">
-            <div class="handle">
-            </div>
-          </div>
-        </label>
-      </li>
-      <li class="item item-toggle">
-        Light 3
-        <label class="toggle toggle-positive">
-          <input type="checkbox" id="device3" data-device="3">
-          <div class="track">
-            <div class="handle">
-            </div>
-          </div>
-        </label>
-      </li>
-      
-      <li class="item item-toggle">
-        Light 4
-        <label class="toggle toggle-positive">
-          <input type="checkbox" id="device4" data-device="4">
-          <div class="track">
-            <div class="handle">
-            </div>
-          </div>
-        </label>
-      </li>
-      
-      <li class="item">
-        Blinds 1
-		<div class="buttongroup">
-			<button class="button button-positive" data-device="6" data-value="on">Down</button>
-			<button class="button button-positive" data-device="6" data-value="off">Up</button>
-		</div>
-      </li>
-      
-      <li class="item">
-        Blinds 2
-		<div class="buttongroup">
-			<button class="button button-positive" data-device="7" data-value="on">Down</button>
-			<button class="button button-positive" data-device="7" data-value="off">Up</button>
-		</div>
-      </li>
-      
-      <li class="item item-toggle">
-        Automatic
-        <label class="toggle toggle-positive">
-          <input type="checkbox" id="auto" data-device="auto">
-          <div class="track">
-            <div class="handle">
-            </div>
-          </div>
-        </label>
-      </li>
-	 
-	</ul>
-  </div>
-  </div>
-  <div class="ct bar bar-footer bar-positive">
-    <div id="ftr" class="title">
-    </div>
-  </div>
-  
 
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Home Switch</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <ul id="itemList" class="list-group">
+            <li class="list-group-item">
+                <label> Light 1 </label>
+                <div class="btn-group pull-right">
+                  <button class="btn btn-primary active"  data-device="device1" data-value="on" >ON</button>
+                  <button class="btn btn-default"  data-device="device1" data-value="off" >OFF</button>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <label> Light 2 </label>
+                <div class="btn-group pull-right">
+                  <button class="btn btn-primary active" data-device="device2" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-device="device2" data-value="off" >OFF</button>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <label> Light 3 </label>
+                <div class="btn-group pull-right">
+                  <button class="btn btn-primary active" data-device="device3" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-device="device3" data-value="off" >OFF</button>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <label> Light 4 </label>
+                <div class="btn-group pull-right">
+                  <button class="btn btn-primary active" data-device="device4" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-device="device4" data-value="off" >OFF</button>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <label> Blinds 1 </label>
+                  <div class="pull-right">
+                      <button class="btn btn-default" data-device="device6" data-value="on">Down</button>
+                      <button class="btn btn-default" data-device="device6" data-value="off">Up</button>
+                  </div>
+            </li>
+
+            <li class="list-group-item">
+                <label> Blinds 2 </label>
+                <div class="pull-right">
+                      <button class="btn btn-default" data-device="device7" data-value="on">Down</button>
+                      <button class="btn btn-default" data-device="device7" data-value="off">Up</button>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <label>
+                    Automatic
+                </label>
+                <div class="btn-group btn-toggle pull-right">
+                  <button class="btn btn-primary active" data-device="auto" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-device="auto" data-value="off" >OFF</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <footer class="footer">
+     <div class="container">
+       <p id="err" class="text-muted"></p>
+     </div>
+   </footer>
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type='text/javascript'>
+        //<![CDATA[
+        window.onload = function() {
+            var busy = false;
+
+            function showError(jqxhr,err,errtxt) {
+               $("#err").html('An error occurred trying to connect to the service');
+            }
+
+            function setState(serviceResponse) {
+                for (var item in serviceResponse) {
+                    var active = (serviceResponse[item] === 'on') ? 'on':'off';
+                    var inactive = (active === 'off') ? 'on':'off';
+                    $("[data-device="+item+"][data-value="+active+"]").removeClass("btn-default").addClass("btn-primary active");
+                    $("[data-device="+item+"][data-value="+inactive+"]").removeClass("btn-primary active").addClass("btn-default");
+
+                }
+                $("#err").html('');
+            }
+
+            function callService(id, value) {
+                var serviceUrl = '/cgi-bin/switch';
+                var data = {
+                  sid:Math.random()
+                };
+                if (value) {
+                    data[id] = value;
+                }
+                //showError(url);
+                $.ajax({
+                   dataType: "json",
+                   url: serviceUrl,
+                   data: data,
+                   success: setState,
+                   error: showError
+                });
+            }
+
+
+            callService();
+
+            $( ":button" ).click(
+              function () {
+                if (!busy) {
+                    callService(this.getAttribute('data-device'), this.getAttribute('data-value'));
+                }
+              });
+        }; //]]>
+    </script>
 </body>
 
-
 </html>
-

@@ -36,9 +36,9 @@ function handlePower(query,client){
 function handleState(query){
 	if (! query) return;
 	Object.keys(query).forEach(function(key) {
-        var val = query[key];
+    var val = query[key];
 		if (! statevals[val]) return;
-        if (state[key] !== val){
+    if (state[key] !== val){
 			ls.switch(key,val);
 			state[key] = val;
 		}
@@ -65,4 +65,3 @@ app.use(function(req, res){
   });
 
 app.listen(port, function() { console.log('listening')});
-
