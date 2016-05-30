@@ -36,47 +36,47 @@
         <ul id="itemList" class="list-group">
             <li class="list-group-item">
                 <label> Light 1 </label>
-                <div class="btn-group pull-right">
-                  <button class="btn btn-primary active"  data-device="device1" data-value="on" >ON</button>
-                  <button class="btn btn-default"  data-device="device1" data-value="off" >OFF</button>
+                <div class="btn-group pull-right" data-device="device1">
+                  <button class="btn btn-primary active" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-value="off" >OFF</button>
                 </div>
             </li>
             <li class="list-group-item">
                 <label> Light 2 </label>
-                <div class="btn-group pull-right">
-                  <button class="btn btn-primary active" data-device="device2" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-device="device2" data-value="off" >OFF</button>
+                <div class="btn-group pull-right" data-device="device2">
+                  <button class="btn btn-primary active" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-value="off" >OFF</button>
                 </div>
             </li>
             <li class="list-group-item">
                 <label> Light 3 </label>
-                <div class="btn-group pull-right">
-                  <button class="btn btn-primary active" data-device="device3" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-device="device3" data-value="off" >OFF</button>
+                <div class="btn-group pull-right" data-device="device3" >
+                  <button class="btn btn-primary active" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-value="off" >OFF</button>
                 </div>
             </li>
 
             <li class="list-group-item">
                 <label> Light 4 </label>
-                <div class="btn-group pull-right">
-                  <button class="btn btn-primary active" data-device="device4" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-device="device4" data-value="off" >OFF</button>
+                <div class="btn-group pull-right" data-device="device4">
+                  <button class="btn btn-primary active" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-value="off" >OFF</button>
                 </div>
             </li>
 
             <li class="list-group-item">
                 <label> Blinds 1 </label>
-                  <div class="pull-right">
-                      <button class="btn btn-default" data-device="device6" data-value="on">Down</button>
-                      <button class="btn btn-default" data-device="device6" data-value="off">Up</button>
+                  <div class="pull-right" data-device="device6">
+                      <button class="btn btn-default" data-value="on">Down</button>
+                      <button class="btn btn-default" data-value="off">Up</button>
                   </div>
             </li>
 
             <li class="list-group-item">
                 <label> Blinds 2 </label>
-                <div class="pull-right">
-                      <button class="btn btn-default" data-device="device7" data-value="on">Down</button>
-                      <button class="btn btn-default" data-device="device7" data-value="off">Up</button>
+                <div class="pull-right" data-device="device7">
+                      <button class="btn btn-default" data-value="on">Down</button>
+                      <button class="btn btn-default" data-value="off">Up</button>
                 </div>
             </li>
 
@@ -84,9 +84,9 @@
                 <label>
                     Automatic
                 </label>
-                <div class="btn-group btn-toggle pull-right">
-                  <button class="btn btn-primary active" data-device="auto" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-device="auto" data-value="off" >OFF</button>
+                <div class="btn-group pull-right" data-device="auto">
+                  <button class="btn btn-primary active" data-value="on" >ON</button>
+                  <button class="btn btn-default" data-value="off" >OFF</button>
                 </div>
             </li>
         </ul>
@@ -118,9 +118,9 @@
                 for (var item in serviceResponse) {
                     var active = (serviceResponse[item] === 'on') ? 'on':'off';
                     var inactive = (active === 'off') ? 'on':'off';
-                    $("[data-device="+item+"][data-value="+active+"]").removeClass("btn-default").addClass("btn-primary active");
-                    $("[data-device="+item+"][data-value="+inactive+"]").removeClass("btn-primary active").addClass("btn-default");
-
+                    var toggle = $(".btn-group[data-device="+item+"]");
+                    toggle.children("[data-value="+active+"]").removeClass("btn-default").addClass("btn-primary active");
+                    toggle.children("[data-value="+inactive+"]").removeClass("btn-primary active").addClass("btn-default");
                 }
                 $("#err").html('');
             }
@@ -143,13 +143,12 @@
                 });
             }
 
-
             callService();
 
             $( ":button" ).click(
               function () {
                 if (!busy) {
-                    callService(this.getAttribute('data-device'), this.getAttribute('data-value'));
+                    callService($(this).parent().attr('data-device'), $(this).attr('data-value'));
                 }
               });
         }; //]]>
