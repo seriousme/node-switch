@@ -12,9 +12,6 @@ To start:
     npm install
     npm start
 
-    
-The javascript and css index.html inlined on purpose to the reduce the number of http roundtrips.
-
 The GUI can be previewed via https://rawgit.com/seriousme/node-switch/master/public/index.html
 
   
