@@ -42,7 +42,7 @@ function handleState(query) {
       const val = query[key];
       if (!statevals[val]) return;
       if (state[key] !== val) {
-        // ls.switch(key, val);
+        ls.switch(key, val);
         state[key] = val;
       }
     }
