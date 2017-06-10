@@ -1,8 +1,7 @@
 {
   "name": "node-switch",
   "description": "implementation of a home automation gui",
-  "version": "0.2.0",
-  
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/seriousme/node-switch.git"
@@ -11,11 +10,11 @@
     "gui",
     "lightswitch"
   ],
-  "dependencies" : {
-    "express"   :  "4.10.x"
+  "dependencies": {
+    "express": "^4"
   },
   "license": "MIT",
   "engines": {
-    "node": ">=0.6"
+    "node": ">=8"
   }
 }
