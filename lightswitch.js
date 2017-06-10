@@ -1,4 +1,4 @@
-const spawn = require("child_process").spawn;
+const { spawn } = require("child_process");
 const SWITCHCMD = "/usr/local/bin/lightswitch";
 
 const switchMap = {
@@ -26,5 +26,8 @@ exports.switch = (key, value) => {
     if (code !== 0) {
       console.log(SWITCHCMD, "exited with code", code);
     }
+  });
+  lightSwitch.on("error", err => {
+    console.log("Failed to start", SWITCHCMD);
   });
 };
