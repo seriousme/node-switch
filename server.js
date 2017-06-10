@@ -36,8 +36,7 @@ function handlePower(query, client) {
 
 function handleState(query) {
   if (!query) return;
-  for (var key in query) {
-    console.log(key);
+  for (const key in query) {
     if (state[key]) {
       const val = query[key];
       if (!statevals[val]) return;
@@ -50,19 +49,19 @@ function handleState(query) {
 }
 
 const app = express();
-app.use("/cgi-bin/switch", function(req, res) {
+app.use("/cgi-bin/switch", (req, res) => {
   handleState(req.query);
   res.json(state);
 });
-app.use("/cgi-bin/power", function(req, res) {
+app.use("/cgi-bin/power", (req, res) => {
   handlePower(req.query, req.connection.remoteAddress);
   res.json(state);
 });
 app.use("/", express.static(staticSite));
-app.use(function(req, res) {
+app.use((req, res) => {
   res.status(404).send("404: Page not found");
 });
 
-app.listen(port, function() {
-  console.log("listening");
+app.listen(port, () => {
+  console.log("listening at port", port);
 });
