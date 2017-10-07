@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    
+    <!-- fullscreen web app -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="pics/icon-56x56.png" rel="apple-touch-icon" />
@@ -106,53 +111,61 @@
     <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type='text/javascript'>
-        //<![CDATA[
-        window.onload = function() {
-            var busy = false;
+    //<![CDATA[
+window.onload = function() {
+  var busy = false;
 
-            function showError(jqxhr,err,errtxt) {
-               $("#err").html('An error occurred trying to connect to the service');
-            }
+  function showError(jqxhr, err, errtxt) {
+    $("#err").html("An error occurred trying to connect to the service");
+  }
 
-            function setState(serviceResponse) {
-                for (var item in serviceResponse) {
-                    var active = (serviceResponse[item] === 'on') ? 'on':'off';
-                    var inactive = (active === 'off') ? 'on':'off';
-                    var toggle = $(".btn-group[data-device="+item+"]");
-                    toggle.children("[data-value="+active+"]").removeClass("btn-default").addClass("btn-primary active");
-                    toggle.children("[data-value="+inactive+"]").removeClass("btn-primary active").addClass("btn-default");
-                }
-                $("#err").html('');
-            }
+  function setState(serviceResponse) {
+    for (var item in serviceResponse) {
+      var active = serviceResponse[item] === "on" ? "on" : "off";
+      var inactive = active === "off" ? "on" : "off";
+      var toggle = $(".btn-group[data-device=" + item + "]");
+      toggle
+        .children("[data-value=" + active + "]")
+        .removeClass("btn-default")
+        .addClass("btn-primary active");
+      toggle
+        .children("[data-value=" + inactive + "]")
+        .removeClass("btn-primary active")
+        .addClass("btn-default");
+    }
+    $("#err").html("");
+  }
 
-            function callService(id, value) {
-                var serviceUrl = '/cgi-bin/switch';
-                var data = {
-                  sid:Math.random()
-                };
-                if (value) {
-                    data[id] = value;
-                }
-                //showError(url);
-                $.ajax({
-                   dataType: "json",
-                   url: serviceUrl,
-                   data: data,
-                   success: setState,
-                   error: showError
-                });
-            }
+  function callService(id, value) {
+    var serviceUrl = "/cgi-bin/switch";
+    var data = {
+      sid: Math.random()
+    };
+    if (value) {
+      data[id] = value;
+    }
+    //showError(url);
+    $.ajax({
+      dataType: "json",
+      url: serviceUrl,
+      data: data,
+      success: setState,
+      error: showError
+    });
+  }
 
-            callService();
+  callService();
 
-            $( ":button" ).click(
-              function () {
-                if (!busy) {
-                    callService($(this).parent().attr('data-device'), $(this).attr('data-value'));
-                }
-              });
-        }; //]]>
-    </script>
+  $(":button").click(function() {
+    if (!busy) {
+      callService(
+        $(this).parent().attr("data-device"),
+        $(this).attr("data-value")
+      );
+    }
+  });
+}; //]]>
+</script>
 </body>
 
 </html>
