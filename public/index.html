@@ -1,171 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    
-    <!-- fullscreen web app -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
+  <meta charset='utf8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
 
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="pics/icon-56x56.png" rel="apple-touch-icon" />
-    <link rel="shortcut icon" sizes="196x196" href="pics/icon-196x196.png">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="apple-touch-icon" href="pics/icon-56x56.png" />
+  <link rel="shortcut icon" sizes="196x196" href="pics/icon-196x196.png">
 
-    <title>Home Switch</title>
+  <title>Huisbediening</title>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="css/bootstrap.4.min.css">
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-
-    <!-- Bootstrap theme -->
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/starter-template.css" rel="stylesheet">
+  <!-- Bootstrap theme -->
+  <link rel="stylesheet" href="css/bootstrap-theme.4.min.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Home Switch</a>
-            </div>
-        </div>
+  <div id="Controls">
+    <nav class="navbar navbar-inverse bg-inverse">
+      <div class="container text-light">
+        <span class="navbar-brand">Huis bediening</span>
+        <span class="navbar-brand my-2 my-sm-0" role="link" onclick="route('Settings')">&vellip;</span>
+      </div>
     </nav>
 
     <div class="container">
-        <ul id="itemList" class="list-group">
-            <li class="list-group-item">
-                <label> Light 1 </label>
-                <div class="btn-group pull-right" data-device="device1">
-                  <button class="btn btn-primary active" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-value="off" >OFF</button>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <label> Light 2 </label>
-                <div class="btn-group pull-right" data-device="device2">
-                  <button class="btn btn-primary active" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-value="off" >OFF</button>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <label> Light 3 </label>
-                <div class="btn-group pull-right" data-device="device3" >
-                  <button class="btn btn-primary active" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-value="off" >OFF</button>
-                </div>
-            </li>
+      <ul id="itemList" class="list-group">
 
-            <li class="list-group-item">
-                <label> Light 4 </label>
-                <div class="btn-group pull-right" data-device="device4">
-                  <button class="btn btn-primary active" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-value="off" >OFF</button>
-                </div>
-            </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Lamp 1
+          <div id="lamp/1" class="btn-group btn-toggle pull-right" onclick="toggle('lamp/1')">
+            <button id="lamp/1-on" class="btn">Aan</button>
+            <button id="lamp/1-off" class="btn">Uit</button>
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Lamp 2
+          <div id="lamp/2" class="btn-group btn-toggle pull-right" onclick="toggle('lamp/2')">
+            <button id="lamp/2-on" class="btn">Aan</button>
+            <button id="lamp/2-off" class="btn">Uit</button>
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Lamp 3
+          <div id="lamp/3" class="btn-group btn-toggle pull-right" onclick="toggle('lamp/3')">
+            <button id="lamp/3-on" class="btn">Aan</button>
+            <button id="lamp/3-off" class="btn">Uit</button>
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Lamp 4
+          <div id="lamp/4" class="btn-group btn-toggle pull-right" onclick="toggle('lamp/4')">
+            <button id="lamp/4-on" class="btn">Aan</button>
+            <button id="lamp/4-off" class="btn">Uit</button>
+          </div>
+        </li>
 
-            <li class="list-group-item">
-                <label> Blinds 1 </label>
-                  <div class="pull-right" data-device="device6">
-                      <button class="btn btn-default" data-value="on">Down</button>
-                      <button class="btn btn-default" data-value="off">Up</button>
-                  </div>
-            </li>
-
-            <li class="list-group-item">
-                <label> Blinds 2 </label>
-                <div class="pull-right" data-device="device7">
-                      <button class="btn btn-default" data-value="on">Down</button>
-                      <button class="btn btn-default" data-value="off">Up</button>
-                </div>
-            </li>
-
-            <li class="list-group-item">
-                <label>
-                    Automatic
-                </label>
-                <div class="btn-group pull-right" data-device="auto">
-                  <button class="btn btn-primary active" data-value="on" >ON</button>
-                  <button class="btn btn-default" data-value="off" >OFF</button>
-                </div>
-            </li>
-        </ul>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Luik opzij
+          <div class="btn-group pull-right">
+            <button class="btn btn-default" onclick="push('blinds/side','down' )">Omlaag</button>
+            <button class="btn btn-default" onclick="push('blinds/side','up')">Omhoog</button>
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Luik voor
+          <div class="btn-group pull-right">
+            <button class="btn btn-default" onclick="push('blinds/front','down' )">Omlaag</button>
+            <button class="btn btn-default" onclick="push('blinds/front','up')">Omhoog</button>
+          </div>
+        </li>
+      </ul>
     </div>
-    <footer class="footer">
-     <div class="container">
-       <p id="err" class="text-muted"></p>
-     </div>
-   </footer>
+  </div>
+  <div id="Settings" hidden>
+    <nav class="navbar navbar-inverse bg-inverse">
+      <div class="container text-light">
+        <span class="navbar-brand font-weight-bold" role="link" onclick="route('Controls')">&times;</span>
+      </div>
+    </nav>
 
-
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script type='text/javascript'>
-    //<![CDATA[
-window.onload = function() {
-  var busy = false;
-
-  function showError(jqxhr, err, errtxt) {
-    $("#err").html("An error occurred trying to connect to the service");
-  }
-
-  function setState(serviceResponse) {
-    for (var item in serviceResponse) {
-      var active = serviceResponse[item] === "on" ? "on" : "off";
-      var inactive = active === "off" ? "on" : "off";
-      var toggle = $(".btn-group[data-device=" + item + "]");
-      toggle
-        .children("[data-value=" + active + "]")
-        .removeClass("btn-default")
-        .addClass("btn-primary active");
-      toggle
-        .children("[data-value=" + inactive + "]")
-        .removeClass("btn-primary active")
-        .addClass("btn-default");
-    }
-    $("#err").html("");
-  }
-
-  function callService(id, value) {
-    var serviceUrl = "/cgi-bin/switch";
-    var data = {
-      sid: Math.random()
-    };
-    if (value) {
-      data[id] = value;
-    }
-    //showError(url);
-    $.ajax({
-      dataType: "json",
-      url: serviceUrl,
-      data: data,
-      success: setState,
-      error: showError
-    });
-  }
-
-  callService();
-
-  $(":button").click(function() {
-    if (!busy) {
-      callService(
-        $(this).parent().attr("data-device"),
-        $(this).attr("data-value")
-      );
-    }
-  });
-}; //]]>
-</script>
+    <div class="container">
+      <ul id="itemList" class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Automatisch schakelen op tijd
+          <div id="config/auto" class="btn-group btn-toggle pull-right" onclick="toggle('config/auto')">
+            <button id="config/auto-on" class="btn">Aan</button>
+            <button id="config/auto-off" class="btn">Uit</button>
+          </div>
+        </li>
+        <li id="config/sunblock" class="list-group-item d-none justify-content-between align-items-center">
+          Automatische zonblokkering
+          <div class="btn-group btn-toggle pull-right" onclick="toggle('config/sunblock')">
+            <button id="config/sunblock-on" class="btn">Aan</button>
+            <button id="config/sunblock-off" class="btn">Uit</button>
+          </div>
+        </li>
+        <li id="forecast" class="list-group-item d-none">
+          <table>
+              <tr><th colspan="2">Weerbericht van <span id="forecast-date"/></th></tr>
+              <tr><td>Weer:</td><td><span id="forecast-weer"/></td></tr>
+              <tr><td>Max.:</td><td><span id="forecast-tmax"></span> C</td></tr>
+              <tr><td>Min.:</td><td><span id="forecast-tmin"></span> C</td></tr>
+              <tr><td>Zon:</td><td><span id="forecast-zon"></span> %</td></tr>
+              <tr><td>Neerslag:</td><td><span id="forecast-neerslag"></span> %</td></tr>
+              <tr><td>Wind:</td><td><span id="forecast-windk"></span> Bft</td></tr>
+              <tr><td>Richting:</td><td><span id="forecast-windr"/></td></tr>
+          </table>
+        </li>
+        <li id="config/useweather" class="list-group-item d-none justify-content-between align-items-center">
+          Gebruik weerbericht voor zonblokkering
+          <div class="btn-group btn-toggle pull-right" onclick="toggle('config/useweather')">
+            <button id="config/useweather-on" class="btn">Aan</button>
+            <button id="config/useweather-off" class="btn">Uit</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <footer class="footer">
+    <div class="container">
+      <p id="error" class="text-muted"></p>
+    </div>
+  </footer>
+  <script src='mqtt.js'></script>
+  <script src='main.js'></script>
 </body>
 
 </html>

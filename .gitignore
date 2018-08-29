@@ -13,3 +13,8 @@ Desktop.ini
 ## nodejs
 ##############
 node_modules
+
+##############
+## private config
+##############
+.config.json

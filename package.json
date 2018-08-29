@@ -11,7 +11,12 @@
     "lightswitch"
   ],
   "dependencies": {
-    "express": "^4"
+    "aedes": "^0.35.2",
+    "aedes-persistence-nedb": "^1.0.5",
+    "axios": "^0.18.0",
+    "express": "^4.16.3",
+    "mqtt": "^2.18.3",
+    "websocket-stream": "^5.1.2"
   },
   "license": "MIT",
   "engines": {
