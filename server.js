@@ -1,67 +1,72 @@
-const ls = require("./lightswitch");
-const express = require("express");
-
-const port = 8080;
+const mqttPort = 1883;
+const httpPort = 8080;
 const staticSite = __dirname + "/public";
+const mqttJS = __dirname + "/node_modules/mqtt/dist/mqtt.min.js";
 
-const state = {
-  auto: "on",
-  device1: "off",
-  device2: "off",
-  device3: "off",
-  device4: "off",
-  device5: "off",
-  power: {}
-};
+const NedbPersistence = require("aedes-persistence-nedb");
+const db = new NedbPersistence();
+const aedes = require("aedes")({ persistence: db });
+// MQTT server
+const server = require("net").createServer(aedes.handle);
 
-const statevals = { on: "1", off: "0" };
-
-function handlePower(query, client) {
-  if (!query) return;
-  if (!query.cmd) return;
-  client = "ip" + client;
-  if (query.cmd === "on") {
-    if (Object.keys(state.power).length === 0) ls.switch("power", query.cmd);
-    state.power[client] = "active";
-  }
-  if (query.cmd === "off") {
-    delete state.power[client];
-    if (Object.keys(state.power).length === 0) ls.switch("power", query.cmd);
-  }
-  if (query.cmd === "del") {
-    state.power = {};
-    ls.switch("power", "off");
-  }
-}
-
-function handleState(query) {
-  if (!query) return;
-  for (const key in query) {
-    if (state[key]) {
-      const val = query[key];
-      if (!statevals[val]) return;
-      if (state[key] !== val) {
-        ls.switch(key, val);
-        state[key] = val;
-      }
-    }
-  }
-}
-
-const app = express();
-app.use("/cgi-bin/switch", (req, res) => {
-  handleState(req.query);
-  res.json(state);
+server.listen(mqttPort, () => {
+  console.log("MQTT server listening on port", mqttPort);
 });
-app.use("/cgi-bin/power", (req, res) => {
-  handlePower(req.query, req.connection.remoteAddress);
-  res.json(state);
+
+// HTTP server
+const express = require("express");
+const app = express();
+app.use("/mqtt.js", (req, res) => res.sendFile(mqttJS));
+app.use("/publish", (req, res) => {
+  console.log(
+    `new http publish on "${req.query.topic}" from ${
+      req.connection.remoteAddress
+    }`
+  );
+  res.json(
+    aedes.publish({
+      cmd: "publish",
+      qos: req.query.qos || 0,
+      topic: req.query.topic,
+      payload: Buffer.from(req.query.message),
+      retain: req.query.retain
+    })
+  );
 });
 app.use("/", express.static(staticSite));
-app.use((req, res) => {
-  res.status(404).send("404: Page not found");
+const httpServer = require("http").createServer(app);
+
+// WebSockets server
+const ws = require("websocket-stream");
+
+ws.createServer(
+  {
+    server: httpServer
+  },
+  aedes.handle
+);
+
+httpServer.listen(httpPort, () => {
+  console.log("websocket server listening on port", httpPort);
 });
 
-app.listen(port, () => {
-  console.log("listening at port", port);
+aedes.on("publish", (packet, client) => {
+  if (client) {
+    console.log(
+      "message from client",
+      client.id,
+      packet.topic,
+      packet.payload.toString()
+    );
+  }
+});
+
+aedes.on("client", client => {
+  const clientType = client.conn.remoteAddress
+    ? "MQTT"
+    : "MQTT over websockets";
+  console.log(
+    `new ${clientType} client "${client.id}" connecting from ${client.conn
+      .remoteAddress || client.conn.socket._socket.remoteAddress}`
+  );
 });
