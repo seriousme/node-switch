@@ -1,29 +1,16 @@
 const axios = require("axios");
-const config = require("../.config.json");
+const mqtt = require("../lib/mqttRoute");
+
+const { weerlive } = require("../.config.json");
 
 const weatherUrl = `http://weerlive.nl/api/json-data-10min.php?key=${
-  config.weerlive.key
-}&locatie=${config.weerlive.locatie}`;
-const publishUrl = "http://localhost:8080/publish";
+  weerlive.key
+}&locatie=${weerlive.location}`;
 
-const topic = "data/forecast";
-const qos = { retain: true };
-
-function publish(message) {
-  axios
-    .get(publishUrl, {
-      params: {
-        topic,
-        message,
-        qos
-      }
-    })
-    .then(function(response) {
-      console.log("result of publish:", response.statusText);
-    })
-    .catch(function(error) {
-      console.log("result of publish:", error.message);
-    });
+function publish(data) {
+  const client = mqtt.connect();
+  const topic = "data/forecast/set";
+  client.publish(topic, JSON.stringify(data), null, _ => client.end());
 }
 
 function getWeatherInfo(url) {

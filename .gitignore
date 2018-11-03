@@ -15,6 +15,12 @@ Desktop.ini
 node_modules
 
 ##############
+# local stuff
+##############
+lua
+data
+
+##############
 ## private config
 ##############
 .config.json

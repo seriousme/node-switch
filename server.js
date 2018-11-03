@@ -17,22 +17,22 @@ server.listen(mqttPort, () => {
 const express = require("express");
 const app = express();
 app.use("/mqtt.js", (req, res) => res.sendFile(mqttJS));
-app.use("/publish", (req, res) => {
-  console.log(
-    `new http publish on "${req.query.topic}" from ${
-      req.connection.remoteAddress
-    }`
-  );
-  res.json(
-    aedes.publish({
-      cmd: "publish",
-      qos: req.query.qos || 0,
-      topic: req.query.topic,
-      payload: Buffer.from(req.query.message),
-      retain: req.query.retain
-    })
-  );
-});
+// app.use("/publish", (req, res) => {
+//   console.log(
+//     `new http publish of message "${req.query.message}" on "${
+//       req.query.topic
+//     }" from ${req.connection.remoteAddress}`
+//   );
+//   res.json(
+//     aedes.publish({
+//       cmd: "publish",
+//       qos: req.query.qos || 0,
+//       topic: req.query.topic,
+//       payload: Buffer.from(req.query.message || ""),
+//       retain: req.query.retain
+//     })
+//   );
+// });
 app.use("/", express.static(staticSite));
 const httpServer = require("http").createServer(app);
 
