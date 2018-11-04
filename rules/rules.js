@@ -1,7 +1,10 @@
+const debug = require("debug")("rules");
 const SunCalc = require("suncalc");
-const { location } = require("../.config.json");
+const { location, weerlive } = require("../.config.json");
+
 const mqttRoute = require("../lib/mqttRoute");
-const sw = require("../lib/switch");
+const { deviceSwitch } = require("../lib/deviceSwitch");
+const { getWeatherInfo } = require("../lib/getWeatherInfo");
 
 const app = new mqttRoute();
 const State = new Map();
@@ -18,7 +21,7 @@ function sunRiseHour() {
 
 function sunWait(timeType = "sunset", correction = 0) {
   return new Promise((resolve, reject) => {
-    console.log({ timeType, correction, topic });
+    debug({ timeType, correction, topic });
 
     const time = SunCalc.getTimes(
       new Date(),
@@ -52,14 +55,14 @@ const doPublish = (topic, data) =>
   });
 
 function doSunBlock(topic) {
-  sw.switch(topic, "down")
+  deviceSwitch(topic, "down")
     .then(wait(15))
-    .then(sw.switch(topic, "down"))
+    .then(deviceSwitch(topic, "down"))
     .catch(handleError);
 }
 
 function handleSunRise() {
-  console.log("sunRise");
+  debug("sunRise");
   // these get scheduled in parallel
   sunWait("sunrise", 4020).then(doPublish("blinds/front/auto", "up"));
   sunWait("sunrise", 4920)
@@ -76,7 +79,7 @@ function handleSunRise() {
 }
 
 function handleSunSet() {
-  console.log("sunSet");
+  debug("sunSet");
   sunWait("sunset", 5820)
     .then(doPublish("lamp/1/auto", "on"))
     .then(wait(600))
@@ -111,7 +114,7 @@ function handleSwitchSet(req) {
     app.publish("lamp/4/set", req.data);
     return;
   }
-  sw.switch(topic, req.data)
+  deviceSwitch(topic, req.data)
     .then(() => app.pubRetain(topic, req.data))
     .catch(handleError);
 }
@@ -121,13 +124,13 @@ function handleBlinds(req) {
   switch (req.data) {
     case "up":
     case "down":
-      sw.switch(topic, req.data);
+      deviceSwitch(topic, req.data);
       break;
     case "stripes":
       if (topic.startsWith("blinds/side")) {
-        sw.switch(topic, "down")
+        deviceSwitch(topic, "down")
           .then(wait(22))
-          .then(sw.switch(topic, "down"))
+          .then(deviceSwitch(topic, "down"))
           .catch(handleError);
       }
       break;
@@ -145,10 +148,10 @@ function handleBlinds(req) {
               typeof forecast === null ||
               (isSunny[forecast.weer] && forecast.tmax > 21)
             ) {
-              console.log("doing sunblock because of forecast");
+              debug("doing sunblock because of forecast");
               doSunBlock(topic);
             } else {
-              print("not doing sunblock because of forecast");
+              debug("not doing sunblock because of forecast");
             }
           } else {
             doSunBlock(topic);
@@ -167,7 +170,15 @@ function handleStateSet(req) {
 }
 
 function handleState(req) {
+  debug("setting state", req.topic, req.data);
   State.set(req.topic, req.data);
+}
+
+function handleForecast(req) {
+  const topic = "data/forecast/set";
+  getWeatherInfo(weerlive.location, weerlive.key)
+    .then(data => app.publish(topic, data))
+    .catch(err => handleError(err));
 }
 
 app.use("sun/rise", handleSunRise);
@@ -180,6 +191,7 @@ app.use("blinds/+", handleBlinds);
 app.use("blinds/+/auto", handleAuto);
 app.use("config/+/set", handleStateSet);
 app.use("config/+", handleState);
+app.use("forecast/get", handleForecast);
 app.use("data/+/set", handleStateSet);
 app.use("data/+", handleState);
 app.listen();
