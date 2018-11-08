@@ -1,4 +1,5 @@
 const debug = require("debug")("rules");
+debug.enabled = true;
 const SunCalc = require("suncalc");
 const { location, weerlive } = require("../.config.json");
 
@@ -21,7 +22,7 @@ function sunRiseHour() {
 
 function sunWait(timeType = "sunset", correction = 0) {
   return new Promise((resolve, reject) => {
-    debug({ timeType, correction, topic });
+    debug({ timeType, correction });
 
     const time = SunCalc.getTimes(
       new Date(),
@@ -50,7 +51,8 @@ function sunWait(timeType = "sunset", correction = 0) {
 
 const doPublish = (topic, data) =>
   new Promise(resolve => {
-    app.publish(topic.data);
+    debug("dowait", topic, data);
+    app.publish(topic, data);
     resolve;
   });
 

@@ -1,3 +1,5 @@
+const debug = require("debug")("mqttServer");
+debug.enabled = true;
 const mqttPort = 1883;
 const httpPort = 8080;
 const staticSite = __dirname + "/public";
@@ -10,29 +12,13 @@ const aedes = require("aedes")({ persistence: db });
 const server = require("net").createServer(aedes.handle);
 
 server.listen(mqttPort, () => {
-  console.log("MQTT server listening on port", mqttPort);
+  debug("MQTT server listening on port", mqttPort);
 });
 
 // HTTP server
 const express = require("express");
 const app = express();
 app.use("/mqtt.js", (req, res) => res.sendFile(mqttJS));
-// app.use("/publish", (req, res) => {
-//   console.log(
-//     `new http publish of message "${req.query.message}" on "${
-//       req.query.topic
-//     }" from ${req.connection.remoteAddress}`
-//   );
-//   res.json(
-//     aedes.publish({
-//       cmd: "publish",
-//       qos: req.query.qos || 0,
-//       topic: req.query.topic,
-//       payload: Buffer.from(req.query.message || ""),
-//       retain: req.query.retain
-//     })
-//   );
-// });
 app.use("/", express.static(staticSite));
 const httpServer = require("http").createServer(app);
 
@@ -47,12 +33,12 @@ ws.createServer(
 );
 
 httpServer.listen(httpPort, () => {
-  console.log("websocket server listening on port", httpPort);
+  debug("websocket server listening on port", httpPort);
 });
 
 aedes.on("publish", (packet, client) => {
   if (client) {
-    console.log(
+    debug(
       "message from client",
       client.id,
       packet.topic,
@@ -65,7 +51,7 @@ aedes.on("client", client => {
   const clientType = client.conn.remoteAddress
     ? "MQTT"
     : "MQTT over websockets";
-  console.log(
+  debug(
     `new ${clientType} client "${client.id}" connecting from ${client.conn
       .remoteAddress || client.conn.socket._socket.remoteAddress}`
   );
