@@ -3,6 +3,11 @@ const { getWeatherInfo } = require("../lib/getWeatherInfo");
 
 console.log(weerlive);
 
-getWeatherInfo(weerlive.location, weerlive.key)
-  .then(data => console.log(data))
-  .catch(err => console.log(err));
+(async () => {
+  try {
+    const data = await getWeatherInfo(weerlive.location, weerlive.key1);
+    console.log(data);
+  } catch (error) {
+    console.log(error.message);
+  }
+})();

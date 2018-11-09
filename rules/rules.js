@@ -10,7 +10,7 @@ const { getWeatherInfo } = require("../lib/getWeatherInfo");
 const app = new mqttRoute();
 const State = new Map();
 const handleError = error => console.error(error);
-const wait = sec => new Promise(resolve => setTimeout(resolve, sec * 1000));
+const sleep = sec => new Promise(resolve => setTimeout(resolve, sec * 1000));
 
 function sunRiseHour() {
   return SunCalc.getTimes(
@@ -20,78 +20,64 @@ function sunRiseHour() {
   ).sunrise.getHours();
 }
 
-function sunWait(timeType = "sunset", correction = 0) {
-  return new Promise((resolve, reject) => {
-    debug({ timeType, correction });
+async function sunWait(timeType = "sunset", correction = 0) {
+  debug({ timeType, correction });
 
-    const time = SunCalc.getTimes(
-      new Date(),
-      location.latitude,
-      location.longitude
-    )[timeType];
+  const time = SunCalc.getTimes(
+    new Date(),
+    location.latitude,
+    location.longitude
+  )[timeType];
 
-    if (typeof time !== "object") {
-      reject(`${timeType} is not a valid time type`);
-    }
+  if (typeof time !== "object") {
+    reject(`${timeType} is not a valid time type`);
+  }
 
-    const diff = Math.floor((time - Date.now()) / 1000);
-    const timeTowait = diff - correction;
+  const diff = Math.floor((time - Date.now()) / 1000);
+  const timeTowait = diff - correction;
 
-    if (timeTowait > 0) {
-      wait(timeTowait)
-        .then(resolve)
-        .catch(error => {
-          reject(error.message);
-        });
-    } else {
-      resolve();
-    }
-  });
+  if (timeTowait > 0) {
+    await sleep(timeTowait);
+  }
 }
 
-const doPublish = (topic, data) =>
-  new Promise(resolve => {
-    debug("dowait", topic, data);
-    app.publish(topic, data);
-    resolve;
-  });
-
-function doSunBlock(topic) {
-  deviceSwitch(topic, "down")
-    .then(wait(15))
-    .then(deviceSwitch(topic, "down"))
-    .catch(handleError);
+async function doSunBlock(topic) {
+  deviceSwitch(topic, "down");
+  await sleep(15);
+  deviceSwitch(topic, "down");
 }
 
 function handleSunRise() {
   debug("sunRise");
   // these get scheduled in parallel
-  sunWait("sunrise", 4020).then(doPublish("blinds/front/auto", "up"));
-  sunWait("sunrise", 4920)
-    .then(() => {
-      if (sunRiseHour() < 7) {
-        app.publish("blinds/side/auto", "stripes");
-      } else {
-        wait(3600)
-          .then(doPublish("blinds/side/auto", "up"))
-          .catch(handleError);
-      }
-    })
-    .catch(handleError);
+  // front
+  (async () => {
+    await sunWait("sunrise", 4020);
+    app.publish("blinds/front/auto", "up");
+  })();
+  // side
+  (async () => {
+    await sunWait("sunrise", 4920);
+    if (sunRiseHour() < 7) {
+      app.publish("blinds/side/auto", "stripes");
+    } else {
+      await sleep(3600);
+      app.publish("blinds/side/auto", "up");
+    }
+  })();
 }
 
-function handleSunSet() {
+async function handleSunSet() {
   debug("sunSet");
-  sunWait("sunset", 5820)
-    .then(doPublish("lamp/1/auto", "on"))
-    .then(wait(600))
-    .then(doPublish("lamp/2/auto", "on"))
-    .then(doPublish("lamp/4/auto", "on"))
-    .then(wait(900))
-    .then(doPublish("blinds/front/auto", "down"))
-    .then(wait(600))
-    .then(doPublish("blinds/side/auto", "down"))
-    .catch(handleError);
+  await sunWait("sunset", 5820);
+  app.publish("lamp/1/auto", "on");
+  await sleep(600);
+  app.publish("lamp/2/auto", "on");
+  app.publish("lamp/4/auto", "on");
+  await sleep(900);
+  app.publish("blinds/front/auto", "down");
+  await sleep(600);
+  app.publish("blinds/side/auto", "down");
 }
 
 function handleAuto(req) {
@@ -116,12 +102,11 @@ function handleSwitchSet(req) {
     app.publish("lamp/4/set", req.data);
     return;
   }
-  deviceSwitch(topic, req.data)
-    .then(() => app.pubRetain(topic, req.data))
-    .catch(handleError);
+  deviceSwitch(topic, req.data);
+  app.pubRetain(topic, req.data);
 }
 
-function handleBlinds(req) {
+async function handleBlinds(req) {
   const topic = req.topic;
   switch (req.data) {
     case "up":
@@ -130,10 +115,9 @@ function handleBlinds(req) {
       break;
     case "stripes":
       if (topic.startsWith("blinds/side")) {
-        deviceSwitch(topic, "down")
-          .then(wait(22))
-          .then(deviceSwitch(topic, "down"))
-          .catch(handleError);
+        deviceSwitch(topic, "down");
+        await sleep(22);
+        deviceSwitch(topic, "down");
       }
       break;
     case "sunblock":
@@ -176,11 +160,14 @@ function handleState(req) {
   State.set(req.topic, req.data);
 }
 
-function handleForecast(req) {
+async function handleForecast(req) {
   const topic = "data/forecast/set";
-  getWeatherInfo(weerlive.location, weerlive.key)
-    .then(data => app.publish(topic, data))
-    .catch(err => handleError(err));
+  try {
+    const data = await getWeatherInfo(weerlive.location, weerlive.key);
+    app.publish(topic, data);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 app.use("sun/rise", handleSunRise);
