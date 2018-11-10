@@ -37,6 +37,7 @@ async function sunWait(timeType = "sunset", correction = 0) {
   const timeTowait = diff - correction;
 
   if (timeTowait > 0) {
+    debug("sleeping", { timeType, timeTowait });
     await sleep(timeTowait);
   }
 }
@@ -82,7 +83,7 @@ async function handleSunSet() {
 
 function handleAuto(req) {
   if (State.get("config/auto") === "on") {
-    req.topic = req.topic.replace("/auto", "");
+    req.topic = req.topic.replace("/auto", "/set");
     app.publish(req.topic, req.data);
   }
 }
@@ -106,8 +107,9 @@ function handleSwitchSet(req) {
   app.pubRetain(topic, req.data);
 }
 
-async function handleBlinds(req) {
-  const topic = req.topic;
+async function handleBlindsSet(req) {
+  debug("handleBlinds");
+  const topic = req.topic.replace("/set", "");
   switch (req.data) {
     case "up":
     case "down":
@@ -176,7 +178,7 @@ app.use("lamp/+/set", handleSwitchSet);
 app.use("lamp/+/auto", handleAutoSet);
 app.use("power/set", handleSwitchSet);
 app.use("power/auto", handleAutoSet);
-app.use("blinds/+", handleBlinds);
+app.use("blinds/+/set", handleBlindsSet);
 app.use("blinds/+/auto", handleAuto);
 app.use("config/+/set", handleStateSet);
 app.use("config/+", handleState);
