@@ -1,6 +1,30 @@
 var State = {};
 var mqttClient;
 
+const mqttDemo = {
+  events: {},
+  on: function(evt, fn) {
+    this.events[evt] = fn;
+  },
+  publish: function(evt, data) {
+    this.events.message(evt.replace("/set", ""), data);
+  },
+  initDemo: function() {
+    setError("Using demo mode, no live traffic");
+    this.publish("lamp/1/set", "off");
+    this.publish("lamp/2/set", "off");
+    this.publish("lamp/3/set", "off");
+    this.publish("lamp/4/set", "off");
+    this.publish(
+      "data/forecast/set",
+      '{"date":1541832934232,"weer":"bewolkt","tmax":13,"tmin":10,"windk":3,"windr":"Z","neerslag":29,"zon":3}'
+    );
+    this.publish("config/auto/set", "on");
+    this.publish("config/sunblock/set", "on");
+    this.publish("config/useweather/set", "on");
+  }
+};
+
 const clientId =
   "nodeSwitch_" +
   Math.random()
@@ -101,12 +125,11 @@ function setVisibility() {
   hide("config/sunblock", hideSunblock);
   hide("forecast", hideWeather);
   hide("config/useweather", hideWeather);
-  hide("error", true);
 }
 
-function setError(error) {
+function setError(message) {
   hide("error", false);
-  byId("error").innerText = error.message;
+  byId("error").innerText = message;
 }
 
 function push(id, value) {
@@ -120,7 +143,11 @@ function toggle(id) {
 }
 
 function mqttInit(items) {
-  mqttClient = mqtt.connect({ clientId });
+  try {
+    mqttClient = mqtt.connect({ clientId });
+  } catch (error) {
+    mqttClient = mqttDemo;
+  }
   mqttClient.on("connect", function() {
     mqttClient.subscribe(Object.keys(items));
   });
@@ -132,6 +159,9 @@ function mqttInit(items) {
       handler(topic, message);
     }
   });
+  if (mqttClient.initDemo) {
+    mqttClient.initDemo();
+  }
 }
 
 const Items = {
