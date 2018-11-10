@@ -1,15 +1,15 @@
 const debug = require("debug")("rules");
 debug.enabled = true;
 const SunCalc = require("suncalc");
-const { location, weerlive } = require("../.config.json");
+const { location, weerlive, IFTTT } = require("../.config.json");
 
 const mqttRoute = require("../lib/mqttRoute");
 const { deviceSwitch } = require("../lib/deviceSwitch");
 const { getWeatherInfo } = require("../lib/getWeatherInfo");
+const { triggerIFTTT } = require("../lib/triggerIFTTT");
 
 const app = new mqttRoute();
 const State = new Map();
-const handleError = error => console.error(error);
 const sleep = sec => new Promise(resolve => setTimeout(resolve, sec * 1000));
 
 function sunRiseHour() {
@@ -166,7 +166,7 @@ async function handleForecast(req) {
     const data = await getWeatherInfo(weerlive.location, weerlive.key);
     app.publish(topic, data);
   } catch (error) {
-    handleError(error);
+    triggerIFTTT(IFTTT.event, IFTTT.key, error);
   }
 }
 

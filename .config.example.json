@@ -6,5 +6,9 @@
   "location": {
     "latitude": 52.37,
     "longitude": 4.89
+  },
+  "IFTTT":{
+    "event":"<IFTTT maker event name>",
+    "key":"<my api key>"
   }
 }
