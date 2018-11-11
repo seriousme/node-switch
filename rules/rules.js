@@ -74,7 +74,7 @@ async function handleSunSet() {
   app.publish("lamp/1/auto", "on");
   await sleep(600);
   app.publish("lamp/2/auto", "on");
-  await sleep(1);
+  await sleep(0.5);
   app.publish("lamp/4/auto", "on");
   await sleep(900);
   app.publish("blinds/front/auto", "down");
@@ -100,11 +100,11 @@ async function handleSwitchSet(req) {
   const topic = req.topic.replace("/set", "");
   if (topic === "lamp/all") {
     app.publish("lamp/1/set", req.data);
-    await sleep(1);
+    await sleep(0.5);
     app.publish("lamp/2/set", req.data);
-    await sleep(1);
+    await sleep(0.5);
     app.publish("lamp/4/set", req.data);
-    await sleep(1);
+    await sleep(0.5);
     return;
   }
   deviceSwitch(topic, req.data);
