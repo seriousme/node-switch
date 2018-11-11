@@ -13,6 +13,7 @@
   "dependencies": {
     "aedes": "^0.35.2",
     "aedes-persistence-nedb": "^1.0.5",
+    "await-spawn": "^2.1.1",
     "axios": "^0.18.0",
     "debug": "^4.1.0",
     "eslint": "^5.7.0",
