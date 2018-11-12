@@ -30,7 +30,8 @@ async function sunWait(timeType = "sunset", correction = 0) {
   )[timeType];
 
   if (typeof time !== "object") {
-    reject(`${timeType} is not a valid time type`);
+    debug(`${timeType} is not a valid time type`);
+    return;
   }
 
   const diff = Math.floor((time - Date.now()) / 1000);
@@ -53,16 +54,15 @@ function handleSunRise() {
   // these get scheduled in parallel
   // front
   (async () => {
-    await sunWait("sunrise", 4020);
+    await sunWait("sunrise", 1500);
     app.publish("blinds/front/auto", "up");
   })();
   // side
   (async () => {
-    await sunWait("sunrise", 4920);
     if (sunRiseHour() < 7) {
       app.publish("blinds/side/auto", "stripes");
     } else {
-      await sleep(3600);
+      await sunWait("sunrise", 2400);
       app.publish("blinds/side/auto", "up");
     }
   })();
