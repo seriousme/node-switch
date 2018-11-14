@@ -70,7 +70,7 @@ function handleSunRise() {
 
 async function handleSunSet() {
   debug("sunSet");
-  await sunWait("sunset", 3420);
+  await sunWait("sunset", 2820);
   app.publish("lamp/1/auto", "on");
   await sleep(600);
   app.publish("lamp/2/auto", "on");
