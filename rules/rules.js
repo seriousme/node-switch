@@ -55,6 +55,8 @@ function handleSunRise() {
   // front
   (async () => {
     await sunWait("sunrise", 1500);
+    // wait one second to avoid race condition with blinds side
+    await sleep(1);
     app.publish("blinds/front/auto", "up");
   })();
   // side
