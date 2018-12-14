@@ -1,7 +1,9 @@
 #!/bin/bash
-git clone git://git.drogon.net/wiringPi
-cd wiringPi
-./build
+git clone https://github.com/xpertsavenue/WiringOP-Zero.git
+cd WiringOP-Zero
+sudo ./build
 cd ../kaku
 make kaku
+sudo make install
+cd ..
 
