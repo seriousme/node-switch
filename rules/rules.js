@@ -77,7 +77,7 @@ async function handleSunSet() {
   await sleep(600);
   app.publish("lamp/2/auto", "on");
   await sleep(0.5);
-  app.publish("lamp/4/auto", "on");
+  app.publish("lamp/3/auto", "on");
   await sleep(900);
   app.publish("blinds/front/auto", "down");
   await sleep(600);
@@ -105,7 +105,7 @@ async function handleSwitchSet(req) {
     await sleep(0.5);
     app.publish("lamp/2/set", req.data);
     await sleep(0.5);
-    app.publish("lamp/4/set", req.data);
+    app.publish("lamp/3/set", req.data);
     await sleep(0.5);
     return;
   }
