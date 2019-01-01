@@ -54,7 +54,7 @@ function handleSunRise() {
   // these get scheduled in parallel
   // front
   (async () => {
-    await sunWait("sunrise", 1500);
+    await sunWait("sunrise", 900);
     app.publish("blinds/front/auto", "up");
   })();
   // side
@@ -62,7 +62,7 @@ function handleSunRise() {
     if (sunRiseHour() < 7) {
       app.publish("blinds/side/auto", "stripes");
     } else {
-      await sunWait("sunrise", 2400);
+      await sunWait("sunrise", 1800);
       app.publish("blinds/side/auto", "up");
     }
   })();
