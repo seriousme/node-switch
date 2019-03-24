@@ -117,9 +117,9 @@ async function handleBlindsSet(req) {
       break;
     case "stripes":
       if (topic.startsWith("blinds/side")) {
-        deviceSwitch(topic, "down");
+        deviceSwitch(topic, "up");
         await sleep(22);
-        deviceSwitch(topic, "down");
+        deviceSwitch(topic, "up");
       }
       break;
     case "sunblock":
