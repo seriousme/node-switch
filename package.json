@@ -11,14 +11,14 @@
     "lightswitch"
   ],
   "dependencies": {
-    "aedes": "^0.35.2",
-    "aedes-persistence-nedb": "^1.0.5",
-    "await-spawn": "^2.1.1",
+    "aedes": "^0.37.0",
+    "aedes-persistence-nedb": "^2.0.1",
+    "await-spawn": "^2.1.2",
     "axios": "^0.18.0",
-    "debug": "^4.1.0",
-    "eslint": "^5.7.0",
-    "express": "^4.16.3",
-    "mqtt": "^2.18.3",
+    "debug": "^4.1.1",
+    "eslint": "^5.15.3",
+    "express": "^4.16.4",
+    "mqtt": "^2.18.8",
     "suncalc": "^1.8.0",
     "websocket-stream": "^5.1.2"
   },
