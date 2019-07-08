@@ -5,7 +5,7 @@ console.log(weerlive);
 
 (async () => {
   try {
-    const data = await getWeatherInfo(weerlive.location, weerlive.key1);
+    const data = await getWeatherInfo(weerlive.location, weerlive.key);
     console.log(data);
   } catch (error) {
     console.log(error.message);
