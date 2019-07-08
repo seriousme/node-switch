@@ -6,6 +6,7 @@ const { location, weerlive, IFTTT } = require("../.config.json");
 const mqttRoute = require("../lib/mqttRoute");
 const { deviceSwitch } = require("../lib/deviceSwitch");
 const { getWeatherInfo } = require("../lib/getWeatherInfo");
+const { checkWeatherPi } = require("../lib/checkWeatherPi");
 const { triggerIFTTT } = require("../lib/triggerIFTTT");
 
 const app = new mqttRoute();
@@ -179,6 +180,19 @@ async function handleForecast(req) {
   }
 }
 
+async function handleCheckWeatherPi() {
+  try {
+    await checkWeatherPi();
+  } catch (error) {
+    console.log(error.message);
+    triggerIFTTT(
+      IFTTT.event,
+      IFTTT.key,
+      `checkWeatherPi errored: "${error.message}"`
+    );
+  }
+}
+
 app.use("sun/rise", handleSunRise);
 app.use("sun/set", handleSunSet);
 app.use("lamp/+/set", handleSwitchSet);
@@ -192,4 +206,5 @@ app.use("config/+", handleState);
 app.use("forecast/get", handleForecast);
 app.use("data/+/set", handleStateSet);
 app.use("data/+", handleState);
+app.use("checkWeatherPi", handleCheckWeatherPi);
 app.listen();
