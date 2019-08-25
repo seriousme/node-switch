@@ -46,7 +46,7 @@ async function sunWait(timeType = "sunset", correction = 0) {
 
 async function doSunBlock(topic) {
   deviceSwitch(topic, "down");
-  await sleep(15);
+  await sleep(18);
   deviceSwitch(topic, "down");
 }
 
