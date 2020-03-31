@@ -45,9 +45,16 @@ async function sunWait(timeType = "sunset", correction = 0) {
 }
 
 async function doSunBlock(topic) {
-  deviceSwitch(topic, "down");
-  await sleep(18);
-  deviceSwitch(topic, "down");
+  if (topic.startsWith("blinds/front")) {
+    deviceSwitch(topic, "down");
+    await sleep(18);
+    deviceSwitch(topic, "down");
+  }
+  if (topic.startsWith("blinds/side")) {
+    deviceSwitch(topic, "down");
+    await sleep(10);
+    deviceSwitch(topic, "down");
+  }
 }
 
 function handleSunRise() {
@@ -131,27 +138,27 @@ async function handleBlindsSet(req) {
       }
       break;
     case "sunblock":
-      if (topic.startsWith("blinds/front")) {
-        if (State.get("config/sunblock") === "on") {
-          if (State.get("config/useweather") === "on") {
-            const isSunny = {
-              zonnig: true,
-              halfbewolkt: true,
-              bewolkt: true
-            };
-            const forecast = State.get("data/forecast");
-            if (
-              typeof forecast === null ||
-              (isSunny[forecast.weer] && forecast.tmax > 21)
-            ) {
-              debug("doing sunblock because of forecast");
-              doSunBlock(topic);
-            } else {
-              debug("not doing sunblock because of forecast");
+      if (State.get("config/sunblock") === "on") {
+        let doBlock = true;
+        if (State.get("config/useweather") === "on") {
+          const isSunny = {
+            zonnig: true,
+            halfbewolkt: true,
+            bewolkt: true
+          };
+          const forecast = State.get("data/forecast");
+          if (typeof forecast === object) {
+            if (!isSunny[forecast.weer]) {
+              doBlock = false;
             }
-          } else {
-            doSunBlock(topic);
+            if (topic.startsWith("blinds/front") && forecast.tmax <= 21) {
+              doBlock = false;
+            }
+            debug(`${doBlock ? '' : 'not '}doing sunblock because of forecast`);
           }
+        }
+        if (doBlock) {
+          doSunBlock(topic);
         }
       }
       break;
