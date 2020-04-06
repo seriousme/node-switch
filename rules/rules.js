@@ -13,12 +13,12 @@ const app = new mqttRoute();
 const State = new Map();
 const sleep = sec => new Promise(resolve => setTimeout(resolve, sec * 1000));
 
-function sunRiseHour() {
+function getSunRiseTime() {
   return SunCalc.getTimes(
     new Date(),
     location.latitude,
     location.longitude
-  ).sunrise.getHours();
+  ).sunrise.toTimeString().split(' ')[0];
 }
 
 async function sunWait(timeType = "sunset", correction = 0) {
@@ -67,7 +67,7 @@ function handleSunRise() {
   })();
   // side
   (async () => {
-    if (sunRiseHour() < 7) {
+    if (getSunRiseTime() < "07:30:00") {
       app.publish("blinds/side/auto", "stripes");
     } else {
       await sunWait("sunrise", 1800);
