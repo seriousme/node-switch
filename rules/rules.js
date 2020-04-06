@@ -13,6 +13,26 @@ const app = new mqttRoute();
 const State = new Map();
 const sleep = sec => new Promise(resolve => setTimeout(resolve, sec * 1000));
 
+
+function isSunnyForecast() {
+  if (State.get("config/useweather") === "on") {
+    const isSunny = {
+      zonnig: true,
+      halfbewolkt: true,
+      bewolkt: true
+    };
+    const forecast = State.get("data/forecast");
+    if (typeof forecast === object) {
+      if (!isSunny[forecast.weer]) {
+        debug(`forecast says not sunny`);
+        return false;
+      }
+    }
+  }
+  // if no forecast is available its always sunny
+  return true;
+}
+
 function getSunRiseTime() {
   return SunCalc.getTimes(
     new Date(),
@@ -44,18 +64,6 @@ async function sunWait(timeType = "sunset", correction = 0) {
   }
 }
 
-async function doSunBlock(topic) {
-  if (topic.startsWith("blinds/front")) {
-    deviceSwitch(topic, "down");
-    await sleep(18);
-    deviceSwitch(topic, "down");
-  }
-  if (topic.startsWith("blinds/side")) {
-    deviceSwitch(topic, "down");
-    await sleep(10);
-    deviceSwitch(topic, "down");
-  }
-}
 
 function handleSunRise() {
   debug("sunRise");
@@ -68,7 +76,12 @@ function handleSunRise() {
   // side
   (async () => {
     if (getSunRiseTime() < "07:30:00") {
-      app.publish("blinds/side/auto", "stripes");
+      if (isSunnyForecast()) {
+        app.publish("blinds/side/auto", "stripes");
+      }
+      else {
+        app.publish("blinds/side/auto", "up");
+      }
     } else {
       await sunWait("sunrise", 1800);
       app.publish("blinds/side/auto", "up");
@@ -139,26 +152,17 @@ async function handleBlindsSet(req) {
       break;
     case "sunblock":
       if (State.get("config/sunblock") === "on") {
-        let doBlock = true;
-        if (State.get("config/useweather") === "on") {
-          const isSunny = {
-            zonnig: true,
-            halfbewolkt: true,
-            bewolkt: true
-          };
-          const forecast = State.get("data/forecast");
-          if (typeof forecast === object) {
-            if (!isSunny[forecast.weer]) {
-              doBlock = false;
-            }
-            if (topic.startsWith("blinds/front") && forecast.tmax <= 21) {
-              doBlock = false;
-            }
-            debug(`${doBlock ? '' : 'not '}doing sunblock because of forecast`);
+        if (isSunnyForecast()) {
+          if (topic.startsWith("blinds/front") && forecast.tmax > 21) {
+            deviceSwitch(topic, "down");
+            await sleep(18);
+            deviceSwitch(topic, "down");
           }
-        }
-        if (doBlock) {
-          doSunBlock(topic);
+          if (topic.startsWith("blinds/side")) {
+            deviceSwitch(topic, "down");
+            await sleep(10);
+            deviceSwitch(topic, "down");
+          }
         }
       }
       break;
