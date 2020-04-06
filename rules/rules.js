@@ -14,7 +14,7 @@ const State = new Map();
 const sleep = sec => new Promise(resolve => setTimeout(resolve, sec * 1000));
 
 
-function isSunnyForecast() {
+function isSunnyForecast(minTemp) {
   if (State.get("config/useweather") === "on") {
     const isSunny = {
       zonnig: true,
@@ -25,6 +25,10 @@ function isSunnyForecast() {
     if (typeof forecast === object) {
       if (!isSunny[forecast.weer]) {
         debug(`forecast says not sunny`);
+        return false;
+      }
+      if (minTemp && forecast.tmax <= minTemp) {
+        debug(`forecast says sunny but not warm enough`);
         return false;
       }
     }
@@ -152,17 +156,15 @@ async function handleBlindsSet(req) {
       break;
     case "sunblock":
       if (State.get("config/sunblock") === "on") {
-        if (isSunnyForecast()) {
-          if (topic.startsWith("blinds/front") && forecast.tmax > 21) {
-            deviceSwitch(topic, "down");
-            await sleep(18);
-            deviceSwitch(topic, "down");
-          }
-          if (topic.startsWith("blinds/side")) {
-            deviceSwitch(topic, "down");
-            await sleep(10);
-            deviceSwitch(topic, "down");
-          }
+        if (topic.startsWith("blinds/front") && isSunnyForecast(21)) {
+          deviceSwitch(topic, "down");
+          await sleep(18);
+          deviceSwitch(topic, "down");
+        }
+        if (topic.startsWith("blinds/side") && isSunnyForecast()) {
+          deviceSwitch(topic, "down");
+          await sleep(10);
+          deviceSwitch(topic, "down");
         }
       }
       break;
