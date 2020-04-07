@@ -1,12 +1,12 @@
 const SunCalc = require("suncalc");
 const { location } = require("./.config.json");
 
-function sunRiseHour() {
+function getSunRiseTime() {
   return SunCalc.getTimes(
     new Date(),
     location.latitude,
     location.longitude
-  ).sunrise.getHours();
+  ).sunrise.toTimeString().split(' ')[0];
 }
 
-console.log(sunRiseHour());
+console.log(getSunRiseTime());
