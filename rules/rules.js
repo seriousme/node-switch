@@ -22,7 +22,7 @@ function isSunnyForecast(minTemp) {
       bewolkt: true
     };
     const forecast = State.get("data/forecast");
-    if (typeof forecast === object) {
+    if (typeof forecast === "object") {
       if (!isSunny[forecast.weer]) {
         debug(`forecast says not sunny`);
         return false;
