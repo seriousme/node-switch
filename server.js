@@ -2,7 +2,7 @@ const debug = require("debug")("mqttServer");
 debug.enabled = true;
 const mqttPort = 1883;
 const httpPort = 8080;
-const staticSite = __dirname + "/public";
+const staticSite = __dirname + "/client/public";
 const mqttJS = __dirname + "/node_modules/mqtt/dist/mqtt.min.js";
 
 const NedbPersistence = require("aedes-persistence-nedb");
