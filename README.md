@@ -12,6 +12,6 @@ To start:
     npm install
     npm start
 
-The GUI can be previewed via http://seriousme.github.io/node-switch/public/
+The GUI can be previewed via http://seriousme.github.io/node-switch/client/public/
 
   
