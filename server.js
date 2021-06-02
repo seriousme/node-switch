@@ -4,9 +4,10 @@ const mqttPort = 1883;
 const httpPort = 8080;
 const staticSite = __dirname + "/client/public";
 const mqttJS = __dirname + "/node_modules/mqtt/dist/mqtt.min.js";
+const level = require("level");
+const aedesPersistencelevel = require("aedes-persistence-level");
+const db = aedesPersistencelevel(level("./data"));
 
-const NedbPersistence = require("aedes-persistence-nedb");
-const db = new NedbPersistence();
 const aedes = require("aedes")({ persistence: db });
 // MQTT server
 const server = require("net").createServer(aedes.handle);
@@ -27,7 +28,7 @@ const ws = require("websocket-stream");
 
 ws.createServer(
   {
-    server: httpServer
+    server: httpServer,
   },
   aedes.handle
 );
@@ -47,12 +48,13 @@ aedes.on("publish", (packet, client) => {
   }
 });
 
-aedes.on("client", client => {
+aedes.on("client", (client) => {
   const clientType = client.conn.remoteAddress
     ? "MQTT"
     : "MQTT over websockets";
   debug(
-    `new ${clientType} client "${client.id}" connecting from ${client.conn
-      .remoteAddress || client.conn.socket._socket.remoteAddress}`
+    `new ${clientType} client "${client.id}" connecting from ${
+      client.conn.remoteAddress || client.conn.socket._socket.remoteAddress
+    }`
   );
 });
