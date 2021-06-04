@@ -158,7 +158,7 @@ async function handleBlindsSet(req) {
       if (State.get("config/sunblock") === "on") {
         if (topic.startsWith("blinds/front") && isSunnyForecast(21)) {
           deviceSwitch(topic, "down");
-          await sleep(13);
+          await sleep(11);
           deviceSwitch(topic, "down");
         }
         if (topic.startsWith("blinds/side") && isSunnyForecast()) {
