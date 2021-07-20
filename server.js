@@ -24,14 +24,15 @@ app.use("/", express.static(staticSite));
 const httpServer = require("http").createServer(app);
 
 // WebSockets server
-const ws = require("websocket-stream");
+const WebSocket = require("ws");
 
-ws.createServer(
-  {
-    server: httpServer,
-  },
-  aedes.handle
-);
+const wss = new WebSocket.Server({
+  server: httpServer,
+});
+wss.on("connection", function connection(ws, req) {
+  const wsStream = WebSocket.createWebSocketStream(ws);
+  aedes.handle(wsStream, req);
+});
 
 httpServer.listen(httpPort, () => {
   debug("websocket server listening on port", httpPort);
@@ -54,7 +55,7 @@ aedes.on("client", (client) => {
     : "MQTT over websockets";
   debug(
     `new ${clientType} client "${client.id}" connecting from ${
-      client.conn.remoteAddress || client.conn.socket._socket.remoteAddress
+      client.conn.remoteAddress || client.req.socket.remoteAddress
     }`
   );
 });
