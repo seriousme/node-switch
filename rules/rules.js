@@ -11,15 +11,15 @@ const { triggerIFTTT } = require("../lib/triggerIFTTT");
 
 const app = new mqttRoute();
 const State = new Map();
-const sleep = sec => new Promise(resolve => setTimeout(resolve, sec * 1000));
-
+const sleep = (sec) =>
+  new Promise((resolve) => setTimeout(resolve, sec * 1000));
 
 function isSunnyForecast(minTemp) {
   if (State.get("config/useweather") === "on") {
     const isSunny = {
       zonnig: true,
       halfbewolkt: true,
-      bewolkt: true
+      bewolkt: true,
     };
     const forecast = State.get("data/forecast");
     if (typeof forecast === "object") {
@@ -38,11 +38,9 @@ function isSunnyForecast(minTemp) {
 }
 
 function getSunRiseTime() {
-  return SunCalc.getTimes(
-    new Date(),
-    location.latitude,
-    location.longitude
-  ).sunrise.toTimeString().split(' ')[0];
+  return SunCalc.getTimes(new Date(), location.latitude, location.longitude)
+    .sunrise.toTimeString()
+    .split(" ")[0];
 }
 
 async function sunWait(timeType = "sunset", correction = 0) {
@@ -68,7 +66,6 @@ async function sunWait(timeType = "sunset", correction = 0) {
   }
 }
 
-
 function handleSunRise() {
   debug("sunRise");
   // these get scheduled in parallel
@@ -82,8 +79,7 @@ function handleSunRise() {
     if (getSunRiseTime() < "07:30:00") {
       if (isSunnyForecast()) {
         app.publish("blinds/side/auto", "stripes");
-      }
-      else {
+      } else {
         app.publish("blinds/side/auto", "up");
       }
     } else {
