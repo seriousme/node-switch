@@ -2,6 +2,7 @@
   "name": "node-switch",
   "description": "implementation of a home automation gui",
   "version": "0.3.0",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/seriousme/node-switch.git"

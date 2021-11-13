@@ -1,22 +1,31 @@
-const debug = require("debug")("mqttServer");
+import { createServer as netCreateServer } from "net";
+import { createServer as httpCreateServer } from "http";
+import Express from "express";
+import Aedes from "aedes";
+import level from "level";
+import aedesPersistencelevel from "aedes-persistence-level";
+import { createWebSocketStream, WebSocketServer } from "ws";
+import Debug from "debug";
+
+const debug = Debug("mqttServer");
 debug.enabled = true;
 const mqttPort = 1883;
 const httpPort = 8080;
-const staticSite = __dirname + "/client/public";
-const mqttJS = __dirname + "/node_modules/mqtt/dist/mqtt.min.js";
-const level = require("level");
-const aedesPersistencelevel = require("aedes-persistence-level");
-const db = aedesPersistencelevel(level("./data"));
+
+const localFile = (file) => (new URL(file, import.meta.url).pathname);
+const staticSite = localFile("./client/public");
+const mqttJS = localFile("./node_modules/mqtt/dist/mqtt.min.js");
 
 // Config Aedes MQTT server
-const aedes = require("aedes")({ persistence: db });
+const db = aedesPersistencelevel(level("./data"));
+const aedes = Aedes({ persistence: db });
 aedes.on("publish", (packet, client) => {
   if (client) {
     debug(
       "message from client",
       client.id,
       packet.topic,
-      packet.payload.toString()
+      packet.payload.toString(),
     );
   }
 });
@@ -28,28 +37,24 @@ aedes.on("client", (client) => {
   debug(
     `new ${clientType} client "${client.id}" connecting from ${
       client.conn.remoteAddress || client.req.socket.remoteAddress
-    }`
+    }`,
   );
 });
 
 // Config MQTT Socket server
-const server = require("net").createServer(aedes.handle);
+const server = netCreateServer(aedes.handle);
 
 // Config HTTP server
-const express = require("express");
-const app = express();
+const app = Express();
 app.use("/mqtt.js", (req, res) => res.sendFile(mqttJS));
-app.use("/", express.static(staticSite));
-const httpServer = require("http").createServer(app);
+app.use("/", Express.static(staticSite));
+const httpServer = httpCreateServer(app);
 
 // Config WebSockets server
-const WebSocket = require("ws");
+const wss = new WebSocketServer({ server: httpServer });
 
-const wss = new WebSocket.Server({
-  server: httpServer,
-});
 wss.on("connection", function connection(ws, req) {
-  const wsStream = WebSocket.createWebSocketStream(ws);
+  const wsStream = createWebSocketStream(ws);
   aedes.handle(wsStream, req);
 });
 

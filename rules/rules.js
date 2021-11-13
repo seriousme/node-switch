@@ -1,13 +1,16 @@
-const debug = require("debug")("rules");
-debug.enabled = true;
-const SunCalc = require("suncalc");
-const { location, weerlive, IFTTT } = require("../.config.json");
+import SunCalc from "suncalc";
+import { ConfigJson } from "../lib/config.js";
+import mqttRoute from "../lib/mqttRoute.js";
+import { deviceSwitch } from "../lib/deviceSwitch.js";
+import { getWeatherInfo } from "../lib/getWeatherInfo.js";
+import { checkWeatherPi } from "../lib/checkWeatherPi.js";
+import { triggerIFTTT } from "../lib/triggerIFTTT.js";
+import Debug from "debug";
 
-const mqttRoute = require("../lib/mqttRoute");
-const { deviceSwitch } = require("../lib/deviceSwitch");
-const { getWeatherInfo } = require("../lib/getWeatherInfo");
-const { checkWeatherPi } = require("../lib/checkWeatherPi");
-const { triggerIFTTT } = require("../lib/triggerIFTTT");
+const debug = Debug("rules");
+debug.enabled = true;
+
+const { location, weerlive, IFTTT } = ConfigJson;
 
 const app = new mqttRoute();
 const State = new Map();
@@ -49,7 +52,7 @@ async function sunWait(timeType = "sunset", correction = 0) {
   const time = SunCalc.getTimes(
     new Date(),
     location.latitude,
-    location.longitude
+    location.longitude,
   )[timeType];
 
   if (typeof time !== "object") {
@@ -197,7 +200,7 @@ async function handleCheckWeatherPi() {
     triggerIFTTT(
       IFTTT.event,
       IFTTT.key,
-      `checkWeatherPi errored: "${error.message}"`
+      `checkWeatherPi errored: "${error.message}"`,
     );
   }
 }
