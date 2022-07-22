@@ -2,7 +2,7 @@ import { createServer as netCreateServer } from "net";
 import { createServer as httpCreateServer } from "http";
 import Express from "express";
 import Aedes from "aedes";
-import level from "level";
+import { Level } from "level";
 import aedesPersistencelevel from "aedes-persistence-level";
 import { createWebSocketStream, WebSocketServer } from "ws";
 import Debug from "debug";
@@ -17,7 +17,7 @@ const staticSite = localFile("./client/public");
 const mqttJS = localFile("./node_modules/mqtt/dist/mqtt.min.js");
 
 // Config Aedes MQTT server
-const db = aedesPersistencelevel(level("./data"));
+const db = aedesPersistencelevel(new Level("./data"));
 const aedes = Aedes({ persistence: db });
 aedes.on("publish", (packet, client) => {
   if (client) {
@@ -35,8 +35,7 @@ aedes.on("client", (client) => {
     ? "MQTT"
     : "MQTT over websockets";
   debug(
-    `new ${clientType} client "${client.id}" connecting from ${
-      client.conn.remoteAddress || client.req.socket.remoteAddress
+    `new ${clientType} client "${client.id}" connecting from ${client.conn.remoteAddress || client.req.socket.remoteAddress
     }`,
   );
 });
