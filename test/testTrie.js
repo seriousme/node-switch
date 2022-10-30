@@ -1,4 +1,4 @@
-const Trie = require("../lib/trie");
+import Trie from "../lib/trie.js";
 
 const rules = [
   "a/b/c",

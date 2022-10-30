@@ -1,5 +1,5 @@
-const mqtt = require("../lib/mqttRoute");
-const client = mqtt.connect();
+import { connect } from "../lib/mqttRoute.js";
+const client = connect();
 client.on("connect", () => {
   client.publish("config/auto/set", "off");
   client.publish("lights/2/set", "on");

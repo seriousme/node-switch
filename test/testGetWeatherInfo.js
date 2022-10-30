@@ -1,6 +1,6 @@
-const { weerlive } = require("../.config.json");
-const { getWeatherInfo } = require("../lib/getWeatherInfo");
-
+import { ConfigJson } from "../lib/config.js";
+import { getWeatherInfo } from "../lib/getWeatherInfo.js";
+const { weerlive } = ConfigJson;
 console.log(weerlive);
 
 (async () => {

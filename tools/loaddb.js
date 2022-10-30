@@ -1,5 +1,5 @@
-const mqtt = require("../lib/mqttRoute");
-const client = mqtt.connect();
+import { connect } from "../lib/mqttRoute.js";
+const client = connect();
 client.on("connect", () => {
   client.pubRetain("config/auto", "on");
   client.pubRetain("config/sunblock", "off");

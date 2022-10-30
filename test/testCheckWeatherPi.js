@@ -1,6 +1,8 @@
-const { IFTTT } = require("../.config.json");
-const { checkWeatherPi } = require("../lib/checkWeatherPi");
-const { triggerIFTTT } = require("../lib/triggerIFTTT");
+import { ConfigJson } from "../lib/config.js";
+import { checkWeatherPi } from "../lib/checkWeatherPi.js";
+import { triggerIFTTT } from "../lib/triggerIFTTT.js";
+
+const { IFTTT } = ConfigJson;
 
 console.log(IFTTT);
 
