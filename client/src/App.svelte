@@ -27,14 +27,17 @@
 </script>
 
 <main>
-  {#if page === 'controls'}
+  {#if page === "controls"}
     <nav class="navbar navbar-inverse bg-inverse">
       <div class="container text-light">
         <span class="navbar-brand">Huis bediening</span>
         <span
           class="navbar-brand my-2 my-sm-0"
           role="link"
-          on:click={settingsPage}>
+          tabindex="-1"
+          on:click={settingsPage}
+          on:keypress={settingsPage}
+        >
           &vellip;
         </span>
       </div>
@@ -43,18 +46,19 @@
     <div class="container">
       <ul id="itemList" class="list-group">
         {#each controls as item}
-          {#if item.type === 'switch'}
+          {#if item.type === "switch"}
             <li class={listItemClass}>
               {item.label}
               <Switch
                 topic={item.topic}
                 value={state[item.topic]}
-                on:message={handleMsg} />
+                on:message={handleMsg}
+              />
             </li>
           {/if}
         {/each}
         {#each controls as item}
-          {#if item.type === 'blinds'}
+          {#if item.type === "blinds"}
             <li class={listItemClass}>
               {item.label}
               <Blinds topic={item.topic} on:message={handleMsg} />
@@ -64,13 +68,16 @@
       </ul>
     </div>
   {/if}
-  {#if page === 'settings'}
+  {#if page === "settings"}
     <nav class="navbar navbar-inverse bg-inverse">
       <div class="container text-light">
         <span
           class="navbar-brand font-weight-bold"
           role="link"
-          on:click={controlsPage}>
+          tabindex="-1"
+          on:click={controlsPage}
+          on:keypress={controlsPage}
+        >
           &times;
         </span>
       </div>
@@ -82,27 +89,30 @@
           Automatisch schakelen op tijd
           <Switch
             topic="config/auto"
-            value={state['config/auto']}
-            on:message={handleMsg} />
+            value={state["config/auto"]}
+            on:message={handleMsg}
+          />
         </li>
-        {#if state['config/auto'] === 'on'}
+        {#if state["config/auto"] === "on"}
           <li class={listItemClass}>
             Automatische zonblokkering
             <Switch
               topic="config/sunblock"
-              value={state['config/sunblock']}
-              on:message={handleMsg} />
+              value={state["config/sunblock"]}
+              on:message={handleMsg}
+            />
           </li>
-          {#if state['config/sunblock'] === 'on' && state['data/forecast']}
+          {#if state["config/sunblock"] === "on" && state["data/forecast"]}
             <li class={listItemClass}>
-              <Forecast data={state['data/forecast']} />
+              <Forecast data={state["data/forecast"]} />
             </li>
             <li class={listItemClass}>
               Gebruik weerbericht voor zonblokkering
               <Switch
                 topic="config/useweather"
-                value={state['config/useweather']}
-                on:message={handleMsg} />
+                value={state["config/useweather"]}
+                on:message={handleMsg}
+              />
             </li>
           {/if}
         {/if}

@@ -12,7 +12,7 @@ debug.enabled = true;
 const mqttPort = 1883;
 const httpPort = 8080;
 
-const localFile = (file) => (new URL(file, import.meta.url).pathname);
+const localFile = (file) => new URL(file, import.meta.url).pathname;
 const staticSite = localFile("./client/public");
 const mqttJS = localFile("./node_modules/mqtt/dist/mqtt.min.js");
 
@@ -20,24 +20,25 @@ const mqttJS = localFile("./node_modules/mqtt/dist/mqtt.min.js");
 const db = aedesPersistencelevel(new Level("./data"));
 const aedes = Aedes({ persistence: db });
 aedes.on("publish", (packet, client) => {
-  if (client) {
-    debug(
-      "message from client",
-      client.id,
-      packet.topic,
-      packet.payload.toString(),
-    );
-  }
+	if (client) {
+		debug(
+			"message from client",
+			client.id,
+			packet.topic,
+			packet.payload.toString(),
+		);
+	}
 });
 
 aedes.on("client", (client) => {
-  const clientType = client.conn.remoteAddress
-    ? "MQTT"
-    : "MQTT over websockets";
-  debug(
-    `new ${clientType} client "${client.id}" connecting from ${client.conn.remoteAddress || client.req.socket.remoteAddress
-    }`,
-  );
+	const clientType = client.conn.remoteAddress
+		? "MQTT"
+		: "MQTT over websockets";
+	debug(
+		`new ${clientType} client "${client.id}" connecting from ${
+			client.conn.remoteAddress || client.req.socket.remoteAddress
+		}`,
+	);
 });
 
 // Config MQTT Socket server
@@ -53,15 +54,15 @@ const httpServer = httpCreateServer(app);
 const wss = new WebSocketServer({ server: httpServer });
 
 wss.on("connection", function connection(ws, req) {
-  const wsStream = createWebSocketStream(ws);
-  aedes.handle(wsStream, req);
+	const wsStream = createWebSocketStream(ws);
+	aedes.handle(wsStream, req);
 });
 
 // Start the show
 server.listen(mqttPort, () => {
-  debug("MQTT server listening on port", mqttPort);
+	debug("MQTT server listening on port", mqttPort);
 });
 
 httpServer.listen(httpPort, () => {
-  debug("websocket server listening on port", httpPort);
+	debug("websocket server listening on port", httpPort);
 });

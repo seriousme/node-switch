@@ -1,8 +1,8 @@
 <script>
   export let topic;
   export let value;
-  const active="btn btn-primary"
-  const normal="btn btn-default"
+  const active = "btn btn-primary";
+  const normal = "btn btn-default";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -12,7 +12,12 @@
   }
 </script>
 
-<div class="btn-group btn-toggle pull-right" on:click={toggle}>
-  <button class={value == 'on' ? active : normal}>Aan</button>
-  <button class={value == 'off' ? active : normal }>Uit</button>
+<div
+  class="btn-group btn-toggle pull-right"
+  tabindex="-1"
+  on:click={toggle}
+  on:keydown={toggle}
+>
+  <button class={value == "on" ? active : normal}>Aan</button>
+  <button class={value == "off" ? active : normal}>Uit</button>
 </div>
