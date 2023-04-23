@@ -13,7 +13,7 @@ const mqttPort = 1883;
 const httpPort = 8080;
 
 const localFile = (file) => new URL(file, import.meta.url).pathname;
-const staticSite = localFile("./client/public");
+const staticSite = localFile("./client/dist");
 const mqttJS = localFile("./node_modules/mqtt/dist/mqtt.min.js");
 
 // Config Aedes MQTT server
