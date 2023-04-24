@@ -1,4 +1,4 @@
-const clientId = `nodeSwitch_${Math.random().toString(16).substr(2, 8)}`;
+const clientId = `nodeSwitch_${Math.random().toString(16).substring(2, 8)}`;
 
 const mqttDemo = {
 	events: {},
