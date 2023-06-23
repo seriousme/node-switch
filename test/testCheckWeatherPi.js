@@ -7,14 +7,14 @@ const { IFTTT } = ConfigJson;
 console.log(IFTTT);
 
 (async () => {
-  try {
-    await checkWeatherPi();
-  } catch (error) {
-    console.log(error.message);
-    triggerIFTTT(
-      IFTTT.event,
-      IFTTT.key,
-      `checkWeatherPi errored: "${error.message}"`
-    );
-  }
+	try {
+		await checkWeatherPi();
+	} catch (error) {
+		console.log(error.message);
+		triggerIFTTT(
+			IFTTT.event,
+			IFTTT.key,
+			`checkWeatherPi errored: "${error.message}"`,
+		);
+	}
 })();
