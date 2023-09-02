@@ -79,7 +79,7 @@ function handleSunRise() {
 	})();
 	// side
 	(async () => {
-		if (getSunRiseTime() < "07:30:00") {
+		if (getSunRiseTime() < "07:00:00") {
 			if (isSunnyForecast()) {
 				app.publish("blinds/side/auto", "stripes");
 			} else {
