@@ -16,6 +16,7 @@
     "startrules": "node rules/rules.js"
   },
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.511.0",
     "aedes": "^0.51.0",
     "aedes-persistence-level": "^8.0.1",
     "await-spawn": "^4.0.2",
