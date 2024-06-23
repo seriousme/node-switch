@@ -30,7 +30,7 @@ function isSunnyForecast(minTemp) {
         debug("forecast says not sunny");
         return false;
       }
-      if (minTemp && forecast.tmax <= minTemp) {
+      if (minTemp && forecast.max_temp <= minTemp) {
         debug("forecast says sunny but not warm enough");
         return false;
       }

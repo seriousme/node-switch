@@ -26,23 +26,23 @@
   </tr>
   <tr>
     <td>Max.:</td>
-    <td>{fdata.tmax} C</td>
+    <td>{fdata.max_temp} C</td>
   </tr>
   <tr>
     <td>Min.:</td>
-    <td>{fdata.tmin} C</td>
+    <td>{fdata.min_tem} C</td>
   </tr>
   <tr>
     <td>Zon:</td>
-    <td>{fdata.zon} %</td>
+    <td>{fdata.zond_perc_dag} %</td>
   </tr>
   <tr>
     <td>Neerslag:</td>
-    <td>{fdata.neerslag} %</td>
+    <td>{fdata.neersl_perc_dag} %</td>
   </tr>
   <tr>
     <td>Wind:</td>
-    <td>{fdata.windk} Bft</td>
+    <td>{fdata.windbft} Bft</td>
   </tr>
   <tr>
     <td>Richting:</td>
