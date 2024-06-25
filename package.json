@@ -1,34 +1,34 @@
 {
-  "name": "node-switch",
-  "description": "implementation of a home automation gui",
-  "version": "0.3.0",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/seriousme/node-switch.git"
-  },
-  "keywords": [
-    "gui",
-    "lightswitch"
-  ],
-  "scripts": {
-    "start": "node server.js",
-    "startrules": "node rules/rules.js"
-  },
-  "dependencies": {
-    "@aws-sdk/client-sns": "^3.600.0",
-    "aedes": "^0.51.2",
-    "aedes-persistence-level": "^8.0.1",
-    "await-spawn": "^4.0.2",
-    "debug": "^4.3.5",
-    "express": "^4.19.2",
-    "level": "^8.0.1",
-    "mqtt": "^5.7.2",
-    "suncalc": "^1.9.0",
-    "ws": "^8.17.1"
-  },
-  "license": "MIT",
-  "engines": {
-    "node": ">=18"
-  }
+	"name": "node-switch",
+	"description": "implementation of a home automation gui",
+	"version": "0.3.0",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/seriousme/node-switch.git"
+	},
+	"keywords": ["gui", "lightswitch"],
+	"scripts": {
+		"start": "node server.js",
+		"startrules": "node rules/rules.js"
+	},
+	"dependencies": {
+		"@aws-sdk/client-sns": "^3.600.0",
+		"aedes": "^0.51.2",
+		"aedes-persistence-level": "^8.0.1",
+		"await-spawn": "^4.0.2",
+		"debug": "^4.3.5",
+		"express": "^4.19.2",
+		"level": "^8.0.1",
+		"mqtt": "^5.7.2",
+		"suncalc": "^1.9.0",
+		"ws": "^8.17.1"
+	},
+	"license": "MIT",
+	"engines": {
+		"node": ">=18"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.8.2"
+	}
 }

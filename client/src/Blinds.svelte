@@ -1,15 +1,15 @@
 <script>
-  export let topic;
-  import { createEventDispatcher } from "svelte";
+export let topic;
+import { createEventDispatcher } from "svelte";
 
-  const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher();
 
-  const down = () => sendMsg("down");
-  const up = () => sendMsg("up");
+const down = () => sendMsg("down");
+const up = () => sendMsg("up");
 
-  function sendMsg(msg) {
-    dispatch("message", { topic, msg });
-  }
+function sendMsg(msg) {
+	dispatch("message", { topic, msg });
+}
 </script>
 
 

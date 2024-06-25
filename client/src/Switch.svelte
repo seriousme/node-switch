@@ -1,15 +1,15 @@
 <script>
-  export let topic;
-  export let value;
-  const active = "btn btn-primary";
-  const normal = "btn btn-default";
-  import { createEventDispatcher } from "svelte";
+export let topic;
+export let value;
+const active = "btn btn-primary";
+const normal = "btn btn-default";
+import { createEventDispatcher } from "svelte";
 
-  const dispatch = createEventDispatcher();
-  function toggle() {
-    const msg = value === "on" ? "off" : "on";
-    dispatch("message", { topic, msg });
-  }
+const dispatch = createEventDispatcher();
+function toggle() {
+	const msg = value === "on" ? "off" : "on";
+	dispatch("message", { topic, msg });
+}
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->

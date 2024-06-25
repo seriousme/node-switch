@@ -1,19 +1,19 @@
 <script>
-  export let data;
-  let fdata={};
-  try {
-    fdata = JSON.parse(data);
-    const d = new Date(fdata.date);
-    fdata.localeDate = d.toLocaleDateString("nl-NL", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    });
-  } catch (error) {
-    fdata = data;
-  }
+export let data;
+let fdata = {};
+try {
+	fdata = JSON.parse(data);
+	const d = new Date(fdata.date);
+	fdata.localeDate = d.toLocaleDateString("nl-NL", {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+		hour: "numeric",
+		minute: "numeric",
+	});
+} catch (error) {
+	fdata = data;
+}
 </script>
 
 <table>

@@ -1,0 +1,12 @@
+{
+	"files": {
+		"ignore": ["coverage", "dist"]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"complexity": { "useLiteralKeys": "off" }
+		}
+	}
+}

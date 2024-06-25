@@ -7,10 +7,10 @@ const { SNS } = ConfigJson;
 console.log(IFTTT);
 
 (async () => {
-  try {
-    await checkWeatherPi();
-  } catch (error) {
-    console.log(error.message);
-    sns.publish(SNS.TopicArn, `checkWeatherPi errored: "${error.message}"`);
-  }
+	try {
+		await checkWeatherPi();
+	} catch (error) {
+		console.log(error.message);
+		sns.publish(SNS.TopicArn, `checkWeatherPi errored: "${error.message}"`);
+	}
 })();
