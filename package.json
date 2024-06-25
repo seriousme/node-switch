@@ -16,16 +16,16 @@
     "startrules": "node rules/rules.js"
   },
   "dependencies": {
-    "@aws-sdk/client-sns": "^3.554.0",
-    "aedes": "^0.51.0",
+    "@aws-sdk/client-sns": "^3.600.0",
+    "aedes": "^0.51.2",
     "aedes-persistence-level": "^8.0.1",
     "await-spawn": "^4.0.2",
-    "debug": "^4.3.4",
+    "debug": "^4.3.5",
     "express": "^4.19.2",
     "level": "^8.0.1",
-    "mqtt": "^5.5.2",
+    "mqtt": "^5.7.2",
     "suncalc": "^1.9.0",
-    "ws": "^8.16.0"
+    "ws": "^8.17.1"
   },
   "license": "MIT",
   "engines": {
