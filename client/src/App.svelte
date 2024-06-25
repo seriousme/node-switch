@@ -7,8 +7,14 @@ import Forecast from "./Forecast.svelte";
 import { topics, controls } from "./config.js";
 import MqttClient from "./mqttclient.js";
 
-const settingsPage = () => (page = "settings");
-const controlsPage = () => (page = "controls");
+function settingsPage() {
+	page = "settings";
+}
+
+function controlsPage() {
+	page = "controls";
+}
+
 const listItemClass =
 	"list-group-item d-flex justify-content-between align-items-center";
 
@@ -19,7 +25,7 @@ const mqttClient = new MqttClient(topics, (topic, value) => {
 
 function handleMsg(event) {
 	const m = event.detail;
-	mqttClient.publish(m.topic + "/set", m.msg);
+	mqttClient.publish(`${m.topic}/set`, m.msg);
 }
 
 // start the show

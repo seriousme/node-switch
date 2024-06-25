@@ -1,5 +1,5 @@
-import { createServer as netCreateServer } from "net";
-import { createServer as httpCreateServer } from "http";
+import { createServer as netCreateServer } from "node:net";
+import { createServer as httpCreateServer } from "node:http";
 import Express from "express";
 import Aedes from "aedes";
 import { Level } from "level";
