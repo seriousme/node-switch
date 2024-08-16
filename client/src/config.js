@@ -15,6 +15,11 @@ const controls = [
 		topic: "lamp/3",
 	},
 	{
+		label: "Laptop Power",
+		type: "switch",
+		topic: "power",
+	},
+	{
 		label: "Luik opzij",
 		type: "blinds",
 		topic: "blinds/side",

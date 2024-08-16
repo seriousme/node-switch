@@ -9,5 +9,8 @@
 	},
 	"SNS": {
 		"TopicArn": "<TopicArn>"
+	},
+	"actionTopics": {
+		"power": "<actionTopic>"
 	}
 }

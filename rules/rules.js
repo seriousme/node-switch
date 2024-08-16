@@ -10,7 +10,7 @@ import Debug from "debug";
 const debug = Debug("rules");
 debug.enabled = true;
 
-const { location, weerlive, SNS } = ConfigJson;
+const { location, weerlive, SNS, actionTopics } = ConfigJson;
 
 const app = new mqttRoute();
 const State = new Map();
@@ -127,6 +127,11 @@ async function handleSwitchSet(req) {
 		app.publish("lamp/3/set", req.data);
 		return;
 	}
+
+	if (actionTopics[topic]) {
+		app.publish(actionTopics[topic], req.data);
+		return;
+	}
 	deviceSwitch(topic, req.data);
 	app.pubRetain(topic, req.data);
 }
@@ -205,7 +210,7 @@ app.use("sun/rise", handleSunRise);
 app.use("sun/set", handleSunSet);
 app.use("lamp/+/set", handleSwitchSet);
 app.use("lamp/+/auto", handleAutoSet);
-app.use("power/set", handleSwitchSet);
+app.use("power/set", handlePowerSet);
 app.use("power/auto", handleAutoSet);
 app.use("blinds/+/set", handleBlindsSet);
 app.use("blinds/+/auto", handleAuto);
