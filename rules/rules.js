@@ -130,9 +130,9 @@ async function handleSwitchSet(req) {
 
 	if (actionTopics[topic]) {
 		app.publish(actionTopics[topic], req.data);
-		return;
+	} else {
+		deviceSwitch(topic, req.data);
 	}
-	deviceSwitch(topic, req.data);
 	app.pubRetain(topic, req.data);
 }
 
