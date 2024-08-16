@@ -210,7 +210,7 @@ app.use("sun/rise", handleSunRise);
 app.use("sun/set", handleSunSet);
 app.use("lamp/+/set", handleSwitchSet);
 app.use("lamp/+/auto", handleAutoSet);
-app.use("power/set", handlePowerSet);
+app.use("power/set", handleSwitchSet);
 app.use("power/auto", handleAutoSet);
 app.use("blinds/+/set", handleBlindsSet);
 app.use("blinds/+/auto", handleAuto);
