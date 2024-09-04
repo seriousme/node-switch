@@ -16,14 +16,14 @@
 		"startrules": "node rules/rules.js"
 	},
 	"dependencies": {
-		"@aws-sdk/client-sns": "^3.621.0",
-		"aedes": "^0.51.2",
+		"@aws-sdk/client-sns": "^3.637.0",
+		"aedes": "^0.51.3",
 		"aedes-persistence-level": "^8.0.1",
 		"await-spawn": "^4.0.2",
 		"debug": "^4.3.6",
 		"express": "^4.19.2",
 		"level": "^8.0.1",
-		"mqtt": "^5.9.0",
+		"mqtt": "^5.10.1",
 		"suncalc": "^1.9.0",
 		"ws": "^8.18.0"
 	},
