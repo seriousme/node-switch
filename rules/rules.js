@@ -81,13 +81,13 @@ function handleSunRise() {
 	(async () => {
 		if (getSunRiseTime() < "07:00:00") {
 			if (isSunnyForecast()) {
-				app.publish("blinds/side/auto", "stripes");
+				app.publish("blinds/side/auto", "pos,50");
 			} else {
-				app.publish("blinds/side/auto", "up");
+				app.publish("blinds/side/auto", "open");
 			}
 		} else {
 			await sunWait("sunrise", 1800);
-			app.publish("blinds/side/auto", "up");
+			app.publish("blinds/side/auto", "open");
 		}
 	})();
 }
@@ -102,7 +102,7 @@ async function handleSunSet() {
 	await sleep(900);
 	app.publish("blinds/front/auto", "down");
 	await sleep(600);
-	app.publish("blinds/side/auto", "down");
+	app.publish("blinds/side/auto", "close");
 }
 
 function handleAuto(req) {
@@ -148,30 +148,11 @@ const topic = req.topic.replace("/set", "");;
 		case "down":
 			deviceSwitch(topic, req.data);
 			break;
-		case "stripes":
-			if (topic.startsWith("blinds/side")) {
-				deviceSwitch(topic, "up");
-				await sleep(13);
-				deviceSwitch(topic, "up");
-			}
-			break;
-		case "stripes-down":
-			if (topic.startsWith("blinds/side")) {
-				deviceSwitch(topic, "down");
-				await sleep(10);
-				deviceSwitch(topic, "down");
-			}
-			break;
 		case "sunblock":
 			if (State.get("config/sunblock") === "on") {
 				if (topic.startsWith("blinds/front") && isSunnyForecast(21)) {
 					deviceSwitch(topic, "down");
 					await sleep(12);
-					deviceSwitch(topic, "down");
-				}
-				if (topic.startsWith("blinds/side") && isSunnyForecast()) {
-					deviceSwitch(topic, "down");
-					await sleep(10);
 					deviceSwitch(topic, "down");
 				}
 			}
