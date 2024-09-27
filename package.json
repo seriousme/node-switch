@@ -7,10 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/seriousme/node-switch.git"
 	},
-	"keywords": [
-		"gui",
-		"lightswitch"
-	],
+	"keywords": ["gui", "lightswitch"],
 	"scripts": {
 		"start": "node server.js",
 		"startrules": "node rules/rules.js"

@@ -137,8 +137,9 @@ async function handleSwitchSet(req) {
 }
 
 async function handleBlindsSet(req) {
-	debug("handleBlinds");;
-const topic = req.topic.replace("/set", "");;
+	debug("handleBlinds");
+
+	const topic = req.topic.replace("/set", "");
 	if (actionTopics[topic]) {
 		app.publish(actionTopics[topic], req.data);
 		return;
