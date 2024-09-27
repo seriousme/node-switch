@@ -15,9 +15,9 @@ function sendMsg(msg) {
 
 
 <div class="button-group pull-right">
-  <button class="btn btn-default" on:click={close}>&#25BC</button>
-  <button class="btn btn-default" on:click={stop}>&#23F9</button>
-  <button class="btn btn-default" on:click={open}>&#25B2</button>
+  <button class="btn btn-default" on:click={close}>Omlaag</button>
+  <button class="btn btn-default" on:click={stop}>Stop</button>
+  <button class="btn btn-default" on:click={open}>Omhoog</button>
 </div>
 
 
