@@ -21,8 +21,8 @@ const controls = [
 	},
 	{
 		label: "Luik opzij",
-		type: "blinds",
-		topic: "blinds/side",
+		type: "newBlinds",
+		topic: "blinds-side",
 	},
 	{
 		label: "Luik voor",

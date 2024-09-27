@@ -3,6 +3,7 @@ export let page;
 let error;
 import Switch from "./Switch.svelte";
 import Blinds from "./Blinds.svelte";
+import NewBlinds from "./newBlinds.svelte";
 import Forecast from "./Forecast.svelte";
 import { topics, controls } from "./config.js";
 import MqttClient from "./mqttclient.js";
@@ -68,6 +69,14 @@ controlsPage();
             <li class={listItemClass}>
               {item.label}
               <Blinds topic={item.topic} on:message={handleMsg} />
+            </li>
+          {/if}
+        {/each}
+        {#each controls as item}
+          {#if item.type === "newBlinds"}
+            <li class={listItemClass}>
+              {item.label}
+              <NewBlinds topic={item.topic} on:message={handleMsg} />
             </li>
           {/if}
         {/each}
