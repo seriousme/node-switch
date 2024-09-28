@@ -75,7 +75,7 @@ function handleSunRise() {
 	// front
 	(async () => {
 		await sunWait("sunrise", 900);
-		app.publish("blinds/front/auto", "up");
+		app.publish("blinds/front/auto", "open");
 	})();
 	// side
 	(async () => {
@@ -100,7 +100,7 @@ async function handleSunSet() {
 	app.publish("lamp/2/auto", "on");
 	app.publish("lamp/3/auto", "on");
 	await sleep(900);
-	app.publish("blinds/front/auto", "down");
+	app.publish("blinds/front/auto", "close");
 	await sleep(600);
 	app.publish("blinds/side/auto", "close");
 }
@@ -139,27 +139,19 @@ async function handleSwitchSet(req) {
 async function handleBlindsSet(req) {
 	debug("handleBlinds");
 
+
+	if (req.data === "sunblock") {
+		if (req.topic.startsWith("blinds/front") && isSunnyForecast(21)) {
+			if (State.get("config/sunblock") === "on") {
+					req.data="pos,40";
+				}
+			}
+	}
+
 	const topic = req.topic.replace("/set", "");
 	if (actionTopics[topic]) {
 		app.publish(actionTopics[topic], req.data);
 		return;
-	}
-	switch (req.data) {
-		case "up":
-		case "down":
-			deviceSwitch(topic, req.data);
-			break;
-		case "sunblock":
-			if (State.get("config/sunblock") === "on") {
-				if (topic.startsWith("blinds/front") && isSunnyForecast(21)) {
-					deviceSwitch(topic, "down");
-					await sleep(12);
-					deviceSwitch(topic, "down");
-				}
-			}
-			break;
-		default:
-			break;
 	}
 }
 
