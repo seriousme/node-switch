@@ -10,7 +10,13 @@ import Debug from "debug";
 const debug = Debug("rules");
 debug.enabled = true;
 
-const { location, weerlive, SNS, actionTopics } = ConfigJson;
+const {
+	location,
+	weerlive,
+	SNS,
+	actionTopics = {},
+	sunblock = {},
+} = ConfigJson;
 
 const app = new mqttRoute();
 const State = new Map();
@@ -80,11 +86,7 @@ function handleSunRise() {
 	// side
 	(async () => {
 		if (getSunRiseTime() < "07:00:00") {
-			if (isSunnyForecast()) {
-				app.publish("blinds/side/auto", "pos,50");
-			} else {
-				app.publish("blinds/side/auto", "open");
-			}
+			app.publish("blinds/side/auto", "sunblock");
 		} else {
 			await sunWait("sunrise", 1800);
 			app.publish("blinds/side/auto", "open");
@@ -139,16 +141,24 @@ async function handleSwitchSet(req) {
 async function handleBlindsSet(req) {
 	debug("handleBlinds");
 
-
-	if (req.data === "sunblock") {
-		if (req.topic.startsWith("blinds/front") && isSunnyForecast(21)) {
-			if (State.get("config/sunblock") === "on") {
-					req.data="pos,40";
-				}
-			}
+	const topic = req.topic.replace("/set", "");
+	if (req.data === "sunblock" && sunblock[topic]) {
+		if (
+			topic === "blinds/front" &&
+			State.get("config/sunblock") === "on" &&
+			isSunnyForecast(21)
+		) {
+			req.data = sunblock[topic];
+		} else {
+			return;
+		}
+		if (topic === "blinds/side" && isSunnyForecast()) {
+			req.data = sunblock[topic];
+		} else {
+			req.data = "open";
+		}
 	}
 
-	const topic = req.topic.replace("/set", "");
 	if (actionTopics[topic]) {
 		app.publish(actionTopics[topic], req.data);
 		return;
