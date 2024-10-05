@@ -83,12 +83,17 @@ function handleSunRise() {
 		await sunWait("sunrise", 900);
 		app.publish("blinds/front/auto", "open");
 	})();
+	// back
+	(async () => {
+		await sunWait("sunrise", 1800);
+		app.publish("blinds/back/auto", "open");
+	})();
 	// side
 	(async () => {
 		if (getSunRiseTime() < "07:00:00") {
 			app.publish("blinds/side/auto", "sunblock");
 		} else {
-			await sunWait("sunrise", 1800);
+			await sunWait("sunrise", 1740);
 			app.publish("blinds/side/auto", "open");
 		}
 	})();
