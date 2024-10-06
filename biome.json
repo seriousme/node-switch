@@ -1,6 +1,6 @@
 {
 	"files": {
-		"ignore": ["coverage", "dist"]
+		"ignore": ["client/dist", "client/public"]
 	},
 	"linter": {
 		"enabled": true,

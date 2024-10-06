@@ -101,7 +101,7 @@ function handleSunRise() {
 
 async function handleSunSet() {
 	debug("sunSet");
-	const currentMonth = (new Date()).getMonth()+1;
+	const currentMonth = new Date().getMonth() + 1;
 	await sunWait("sunset", 2220);
 	app.publish("lamp/1/auto", "on");
 	await sleep(600);
@@ -112,7 +112,7 @@ async function handleSunSet() {
 	await sleep(600);
 	app.publish("blinds/side/auto", "close");
 	//from october until end of march
-	if (currentMonth < 4 || currentMonth > 9){
+	if (currentMonth < 4 || currentMonth > 9) {
 		await sleep(600);
 		app.publish("blinds/back/auto", "close");
 	}

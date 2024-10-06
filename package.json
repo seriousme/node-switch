@@ -7,18 +7,21 @@
 		"type": "git",
 		"url": "https://github.com/seriousme/node-switch.git"
 	},
-	"keywords": ["gui", "lightswitch"],
+	"keywords": [
+		"gui",
+		"lightswitch"
+	],
 	"scripts": {
 		"start": "node server.js",
-		"startrules": "node rules/rules.js"
+		"startrules": "node rules/rules.js",
+		"format": "biome format --write ."
 	},
 	"dependencies": {
-		"@aws-sdk/client-sns": "^3.651.1",
+		"@aws-sdk/client-sns": "^3.665.0",
 		"aedes": "^0.51.3",
 		"aedes-persistence-level": "^8.0.1",
 		"await-spawn": "^4.0.2",
 		"debug": "^4.3.7",
-		"express": "^4.21.0",
 		"level": "^8.0.1",
 		"mqtt": "^5.10.1",
 		"suncalc": "^1.9.0",
@@ -29,6 +32,6 @@
 		"node": ">=18"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.1"
+		"@biomejs/biome": "1.9.3"
 	}
 }

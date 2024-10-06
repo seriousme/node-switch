@@ -33,8 +33,7 @@ const controls = [
 		label: "Luik achter",
 		type: "blinds",
 		topic: "blinds/back",
-	}
-	
+	},
 ];
 
 const settings = [
