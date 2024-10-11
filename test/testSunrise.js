@@ -1,5 +1,5 @@
 import SunCalc from "suncalc";
-import { ConfigJson } from "./lib/config.js";
+import ConfigJson from "../.config.json" with { type: "json" };
 const { location } = ConfigJson;
 
 function getSunRiseTime() {

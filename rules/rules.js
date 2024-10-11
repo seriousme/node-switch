@@ -1,5 +1,5 @@
 import SunCalc from "suncalc";
-import { ConfigJson } from "../lib/config.js";
+import ConfigJson from "../.config.json" with { type: "json" };
 import mqttRoute from "../lib/mqttRoute.js";
 import { deviceSwitch } from "../lib/deviceSwitch.js";
 import { getWeatherInfo } from "../lib/getWeatherInfo.js";
