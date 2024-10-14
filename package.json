@@ -25,7 +25,7 @@
 		"aedes-persistence-level": "^8.0.1",
 		"await-spawn": "^4.0.2",
 		"debug": "^4.3.7",
-		"express": "^5.0.0",
+		"express": "^5.0.1",
 		"level": "^8.0.1",
 		"mqtt": "^5.10.1",
 		"suncalc": "^1.9.0",
