@@ -56,7 +56,7 @@ controlsPage();
               {item.label}
               <Switch
                 value={state[item.topic]}
-                sendMsg=createSendMessage(item.topic)
+                sendMsg= { createSendMessage(item.topic) }
               />
             </li>
           {/if}
@@ -66,7 +66,7 @@ controlsPage();
             <li class={listItemClass}>
               {item.label}
               <Blinds 
-               sendMsg=createSendMessage(item.topic)
+               sendMsg= { createSendMessage(item.topic) }
               />
             </li>
           {/if}
