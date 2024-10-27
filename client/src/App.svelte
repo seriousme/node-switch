@@ -1,11 +1,11 @@
 <script>
-export let page;
 let error;
 import Switch from "./Switch.svelte";
 import Blinds from "./Blinds.svelte";
 import Forecast from "./Forecast.svelte";
 import { topics, controls } from "./config.js";
 import MqttClient from "./mqttclient.js";
+let { page = $bindable() } = $props();
 
 function settingsPage() {
 	page = "settings";
@@ -18,14 +18,13 @@ function controlsPage() {
 const listItemClass =
 	"list-group-item d-flex justify-content-between align-items-center";
 
-const state = {};
+const state = $state({});
 const mqttClient = new MqttClient(topics, (topic, value) => {
 	state[topic] = value;
 });
 
-function handleMsg(event) {
-	const m = event.detail;
-	mqttClient.publish(`${m.topic}/set`, m.msg);
+function createSendMessage(topic) {
+	return (message) => mqttClient.publish(`${topic}/set`, message);
 }
 
 // start the show
@@ -41,8 +40,8 @@ controlsPage();
           class="navbar-brand my-2 my-sm-0"
           role="link"
           tabindex="-1"
-          on:click={settingsPage}
-          on:keypress={settingsPage}
+          onclick={settingsPage}
+          onkeypress={settingsPage}
         >
           &vellip;
         </span>
@@ -56,9 +55,8 @@ controlsPage();
             <li class={listItemClass}>
               {item.label}
               <Switch
-                topic={item.topic}
                 value={state[item.topic]}
-                on:message={handleMsg}
+                sendMsg=createSendMessage(item.topic)
               />
             </li>
           {/if}
@@ -67,7 +65,9 @@ controlsPage();
           {#if item.type === "blinds"}
             <li class={listItemClass}>
               {item.label}
-              <Blinds topic={item.topic} on:message={handleMsg} />
+              <Blinds 
+               sendMsg=createSendMessage(item.topic)
+              />
             </li>
           {/if}
         {/each}
@@ -81,8 +81,8 @@ controlsPage();
           class="navbar-brand font-weight-bold"
           role="link"
           tabindex="-1"
-          on:click={controlsPage}
-          on:keypress={controlsPage}
+          onclick={controlsPage}
+          onkeypress={controlsPage}
         >
           &times;
         </span>
@@ -94,18 +94,16 @@ controlsPage();
         <li class={listItemClass}>
           Automatisch schakelen op tijd
           <Switch
-            topic="config/auto"
             value={state["config/auto"]}
-            on:message={handleMsg}
+            sendMsg= { createSendMessage("config/auto") }
           />
         </li>
         {#if state["config/auto"] === "on"}
           <li class={listItemClass}>
             Automatische zonblokkering
             <Switch
-              topic="config/sunblock"
               value={state["config/sunblock"]}
-              on:message={handleMsg}
+              sendMsg= { createSendMessage("config/sunblock")}
             />
           </li>
           {#if state["config/sunblock"] === "on" && state["data/forecast"]}
@@ -115,9 +113,8 @@ controlsPage();
             <li class={listItemClass}>
               Gebruik weerbericht voor zonblokkering
               <Switch
-                topic="config/useweather"
                 value={state["config/useweather"]}
-                on:message={handleMsg}
+                sendMsg={ createSendMessage("config/useweather")}
               />
             </li>
           {/if}

@@ -1,8 +1,9 @@
 <script>
-export let data;
-let fdata = {};
+let { data } = $props();
+
+function parseData(data){
 try {
-	fdata = JSON.parse(data);
+	const fdata = JSON.parse(data);
 	const d = new Date(fdata.date);
 	fdata.localeDate = d.toLocaleDateString("nl-NL", {
 		weekday: "long",
@@ -11,41 +12,46 @@ try {
 		hour: "numeric",
 		minute: "numeric",
 	});
+  return fdata;
 } catch (error) {
-	fdata = data;
+	return data;
 }
+}
+ data = parseData(data);
 </script>
 
 <table>
+<tbody>
   <tr>
-    <th colspan="2">Weerbericht van {fdata.localeDate}</th>
+    <th colspan="2">Weerbericht van {data.localeDate}</th>
   </tr>
   <tr>
     <td>Weer:</td>
-    <td>{fdata.weer}</td>
+    <td>{data.weer}</td>
   </tr>
   <tr>
     <td>Max.:</td>
-    <td>{fdata.max_temp} C</td>
+    <td>{data.max_temp} C</td>
   </tr>
   <tr>
     <td>Min.:</td>
-    <td>{fdata.min_tem} C</td>
+    <td>{data.min_tem} C</td>
   </tr>
   <tr>
     <td>Zon:</td>
-    <td>{fdata.zond_perc_dag} %</td>
+    <td>{data.zond_perc_dag} %</td>
   </tr>
   <tr>
     <td>Neerslag:</td>
-    <td>{fdata.neersl_perc_dag} %</td>
+    <td>{data.neersl_perc_dag} %</td>
   </tr>
   <tr>
     <td>Wind:</td>
-    <td>{fdata.windbft} Bft</td>
+    <td>{data.windbft} Bft</td>
   </tr>
   <tr>
     <td>Richting:</td>
-    <td>{fdata.windr}</td>
+    <td>{data.windr}</td>
   </tr>
+  </tbody>
 </table>
