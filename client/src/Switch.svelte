@@ -1,13 +1,12 @@
 <script>
 const active = "btn btn-primary";
 const normal = "btn btn-default";
-import { createEventDispatcher } from "svelte";
+
 let { sendMsg, value } = $props();
 
-const dispatch = createEventDispatcher();
 function toggle() {
 	const msg = value === "on" ? "off" : "on";
-  sendMsg(msg);
+	sendMsg(msg);
 }
 </script>
 
