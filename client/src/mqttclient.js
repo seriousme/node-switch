@@ -17,16 +17,16 @@ const mqttDemo = {
 		this.publish(
 			"data/forecast/set",
 			JSON.stringify({
-					date: '2024-10-27T15:08:03.000Z',
-					weer: 'halfbewolkt',
-					max_temp: 16,
-					min_tem: 9,
-					windbft: 1,
-					windr: 'ZW',
-					neersl_perc_dag: 0,
-					zond_perc_dag: 47
-				  })
-	);
+				date: "2024-10-27T15:08:03.000Z",
+				weer: "halfbewolkt",
+				max_temp: 16,
+				min_tem: 9,
+				windbft: 1,
+				windr: "ZW",
+				neersl_perc_dag: 0,
+				zond_perc_dag: 47,
+			}),
+		);
 		this.publish("config/auto/set", "on");
 		this.publish("config/sunblock/set", "on");
 		this.publish("config/useweather/set", "on");

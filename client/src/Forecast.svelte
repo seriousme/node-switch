@@ -1,23 +1,23 @@
 <script>
 let { data } = $props();
 
-function parseData(data){
-try {
-	const fdata = JSON.parse(data);
-	const d = new Date(fdata.date);
-	fdata.localeDate = d.toLocaleDateString("nl-NL", {
-		weekday: "long",
-		month: "long",
-		day: "numeric",
-		hour: "numeric",
-		minute: "numeric",
-	});
-  return fdata;
-} catch (error) {
-	return data;
+function parseData(data) {
+	try {
+		const fdata = JSON.parse(data);
+		const d = new Date(fdata.date);
+		fdata.localeDate = d.toLocaleDateString("nl-NL", {
+			weekday: "long",
+			month: "long",
+			day: "numeric",
+			hour: "numeric",
+			minute: "numeric",
+		});
+		return fdata;
+	} catch (error) {
+		return data;
+	}
 }
-}
- data = parseData(data);
+data = parseData(data);
 </script>
 
 <table>
