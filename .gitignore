@@ -24,3 +24,4 @@ data
 ## private config
 ##############
 .config.json
+.vscode/extensions.json

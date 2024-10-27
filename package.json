@@ -7,10 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/seriousme/node-switch.git"
 	},
-	"keywords": [
-		"gui",
-		"lightswitch"
-	],
+	"keywords": ["gui", "lightswitch"],
 	"scripts": {
 		"start": "node server.js",
 		"startrules": "node rules/rules.js",
@@ -36,6 +33,6 @@
 		"node": ">=18"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.3"
+		"@biomejs/biome": "^1.9.3"
 	}
 }
