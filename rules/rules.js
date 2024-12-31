@@ -143,7 +143,7 @@ async function handleSwitchSet(req) {
 		app.publish("lamp/3/set", req.data);
 		return;
 	}
-
+	State.set(topic,req.data);
 	if (actionTopics[topic]) {
 		app.publish(actionTopics[topic], req.data);
 	} else {
