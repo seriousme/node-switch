@@ -16,7 +16,10 @@ const {
 	SNS,
 	actionTopics = {},
 	sunblock = {},
+	mqttServer = {},
 } = ConfigJson;
+
+const lastPid = {};
 
 const app = new mqttRoute();
 const State = new Map();
@@ -176,6 +179,36 @@ async function handleBlindsSet(req) {
 	}
 }
 
+function toggleButton(topic) {
+	const newState = State.get(topic) === "on" ? "off" : "on";
+	app.publish(`${topic}/set`, newState);
+}
+
+
+function handleRemote(req) {
+	const msg = req.data;
+	// check for valid messages
+	if (msg.BTHome_version !== 2) {
+		return;
+	}
+	// debounce
+	if (lastPid[req.topic === msg.pid]) {
+		return;
+	}
+	if (msg.button[0] === 1) {
+		toggleButton("lamp/1");
+	}
+	if (msg.button[1] === 1) {
+		toggleButton("lamp/2");
+	}
+	if (msg.button[2] === 1) {
+		toggleButton("lamp/3");
+	}
+	if (msg.button[3] === 1) {
+		toggleButton("power");
+	}
+}
+
 function handleStateSet(req) {
 	const topic = req.topic.replace("/set", "");
 	app.pubRetain(topic, req.data);
@@ -218,5 +251,6 @@ app.use("config/+", handleState);
 app.use("forecast/get", handleForecast);
 app.use("data/+/set", handleStateSet);
 app.use("data/+", handleState);
+app.use("remote/ble", handleRemote);
 app.use("checkWeatherPi", handleCheckWeatherPi);
-app.listen();
+app.listen(ConfigJson.mqttServer.URL);
