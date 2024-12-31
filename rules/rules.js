@@ -253,4 +253,4 @@ app.use("data/+/set", handleStateSet);
 app.use("data/+", handleState);
 app.use("remote/ble", handleRemote);
 app.use("checkWeatherPi", handleCheckWeatherPi);
-app.listen(ConfigJson.mqttServer.URL);
+app.listen(mqttServer.URL);
