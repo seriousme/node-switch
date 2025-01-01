@@ -182,11 +182,11 @@ async function handleBlindsSet(req) {
 
 async function openAllBlinds() {
 	debug("handleBlinds");
-	app.publish("blinds/back/auto", "open");
-	await sleep(5);
-	app.publish("blinds/side/auto", "open");
-	await sleep(5);
-	app.publish("blinds/front/auto", "open");
+	app.publish("blinds/back", "open");
+	await sleep(2);
+	app.publish("blinds/side", "open");
+	await sleep(2);
+	app.publish("blinds/front", "open");
 }
 
 function toggleButton(topic) {
