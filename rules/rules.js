@@ -20,6 +20,7 @@ const {
 } = ConfigJson;
 
 const lastPid = {};
+let batteryMsgs = 0;
 
 const app = new mqttRoute();
 const State = new Map();
@@ -143,7 +144,7 @@ async function handleSwitchSet(req) {
 		app.publish("lamp/3/set", req.data);
 		return;
 	}
-	State.set(topic,req.data);
+	State.set(topic, req.data);
 	if (actionTopics[topic]) {
 		app.publish(actionTopics[topic], req.data);
 	} else {
@@ -179,11 +180,19 @@ async function handleBlindsSet(req) {
 	}
 }
 
+async function openAllBlinds() {
+	debug("handleBlinds");
+	app.publish("blinds/back/auto", "open");
+	await sleep(5);
+	app.publish("blinds/side/auto", "open");
+	await sleep(5);
+	app.publish("blinds/front/auto", "open");
+}
+
 function toggleButton(topic) {
 	const newState = State.get(topic) === "on" ? "off" : "on";
 	app.publish(`${topic}/set`, newState);
 }
-
 
 function handleRemote(req) {
 	const msg = req.data;
@@ -195,6 +204,11 @@ function handleRemote(req) {
 	if (lastPid[req.topic === msg.pid]) {
 		return;
 	}
+	// warn for empty battery
+	if (msg.battery < 20 && batteryMsgs++ % 10 === 0) {
+		sns.publish(SNS.TopicArn, `BLE battery low: "${msg.battery}"`);
+	}
+
 	if (msg.button[0] === 1) {
 		toggleButton("lamp/1");
 	}
@@ -205,7 +219,7 @@ function handleRemote(req) {
 		toggleButton("lamp/3");
 	}
 	if (msg.button[3] === 1) {
-		toggleButton("power");
+		openAllBlinds();
 	}
 }
 
