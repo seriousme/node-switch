@@ -8,29 +8,6 @@ const mqttDemo = {
 	publish: function (evt, data) {
 		this.events.message(evt.replace("/set", ""), data);
 	},
-	initDemo: function () {
-		this.publish("lamp/1/set", "off");
-		this.publish("lamp/2/set", "off");
-		this.publish("lamp/3/set", "off");
-		this.publish("lamp/4/set", "off");
-		this.publish("power/set", "off");
-		this.publish(
-			"data/forecast/set",
-			JSON.stringify({
-				date: "2024-10-27T15:08:03.000Z",
-				weer: "halfbewolkt",
-				max_temp: 16,
-				min_tem: 9,
-				windbft: 1,
-				windr: "ZW",
-				neersl_perc_dag: 0,
-				zond_perc_dag: 47,
-			}),
-		);
-		this.publish("config/auto/set", "on");
-		this.publish("config/sunblock/set", "on");
-		this.publish("config/useweather/set", "on");
-	},
 };
 
 class MqttClient {
@@ -41,6 +18,7 @@ class MqttClient {
 			mqttClient = mqtt.connect(url, { clientId });
 		} catch (error) {
 			mqttClient = mqttDemo;
+			this.isDemo = true;
 		}
 
 		mqttClient.on("connect", () => {
@@ -51,9 +29,9 @@ class MqttClient {
 			console.log("received", { topic, value });
 			updateState(topic, value || "off");
 		});
-		if (mqttClient.initDemo) {
+		if (mqttClient.isDemo) {
 			updateState("error", "Using demo mode, no live traffic");
-			mqttClient.initDemo();
+			//mqttClient.initDemo();
 		}
 		this.mqttClient = mqttClient;
 	}

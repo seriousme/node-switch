@@ -2,17 +2,17 @@ const controls = [
 	{
 		label: "Lamp 1",
 		type: "switch",
-		topic: "lamp/1",
+		topic: "lights/1",
 	},
 	{
 		label: "Lamp 2",
 		type: "switch",
-		topic: "lamp/2",
+		topic: "lights/2",
 	},
 	{
 		label: "Lamp 3",
 		type: "switch",
-		topic: "lamp/3",
+		topic: "lights/3",
 	},
 	{
 		label: "Laptop Power",
@@ -42,5 +42,7 @@ const settings = [
 	"config/sunblock",
 	"config/useweather",
 ];
+
+
 const topics = controls.map((item) => item.topic).concat(settings);
 export { topics, controls };

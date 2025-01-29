@@ -1,10 +1,10 @@
 <script>
 let error;
-import Switch from "./Switch.svelte";
-import Blinds from "./Blinds.svelte";
-import Forecast from "./Forecast.svelte";
+import Controls from "./Controls.svelte";
+import Settings from "./Settings.svelte";
 import { topics, controls } from "./config.js";
 import MqttClient from "./mqttclient.js";
+
 let { page = $bindable() } = $props();
 
 function settingsPage() {
@@ -18,10 +18,42 @@ function controlsPage() {
 const listItemClass =
 	"list-group-item d-flex justify-content-between align-items-center";
 
+// add auto switch config topics for blinds
+for (const item of controls) {
+	if (item.type === "blinds") {
+		topics.push(`config/auto/${item.topic}`);
+	}
+}
+
 const state = $state({});
 const mqttClient = new MqttClient(topics, (topic, value) => {
 	state[topic] = value;
 });
+
+// this code is for demo use only
+if (mqttClient.isDemo) {
+	for (const item of controls) {
+		if (item.type === "switch") {
+			state[item.topic] = "off";
+		}
+	}
+	state["data/forecast"] = {
+		date: "2024-10-27T15:08:03.000Z",
+		weer: "halfbewolkt",
+		max_temp: 16,
+		min_tem: 9,
+		windbft: 1,
+		windr: "ZW",
+		neersl_perc_dag: 0,
+		zond_perc_dag: 47,
+	};
+	for (const item of topics) {
+		if (item.startsWith("config/")) {
+			state[item] = "on";
+		}
+	}
+}
+// end demo
 
 function createSendMessage(topic) {
 	return (message) => mqttClient.publish(`${topic}/set`, message);
@@ -48,31 +80,12 @@ controlsPage();
       </div>
     </nav>
 
-    <div class="container">
-      <ul id="itemList" class="list-group">
-        {#each controls as item}
-          {#if item.type === "switch"}
-            <li class={listItemClass}>
-              {item.label}
-              <Switch
-                value={state[item.topic]}
-                sendMsg= { createSendMessage(item.topic) }
-              />
-            </li>
-          {/if}
-        {/each}
-        {#each controls as item}
-          {#if item.type === "blinds"}
-            <li class={listItemClass}>
-              {item.label}
-              <Blinds 
-               sendMsg= { createSendMessage(item.topic) }
-              />
-            </li>
-          {/if}
-        {/each}
-      </ul>
-    </div>
+    <Controls
+      createSendMessage= {createSendMessage}
+      state= {state}
+      controls= {controls}
+      listItemClass= {listItemClass}
+    />
   {/if}
   {#if page === "settings"}
     <nav class="navbar navbar-inverse bg-inverse">
@@ -89,38 +102,12 @@ controlsPage();
       </div>
     </nav>
 
-    <div class="container">
-      <ul id="itemList" class="list-group">
-        <li class={listItemClass}>
-          Automatisch schakelen op tijd
-          <Switch
-            value={state["config/auto"]}
-            sendMsg= { createSendMessage("config/auto") }
-          />
-        </li>
-        {#if state["config/auto"] === "on"}
-          <li class={listItemClass}>
-            Automatische zonblokkering
-            <Switch
-              value={state["config/sunblock"]}
-              sendMsg= { createSendMessage("config/sunblock")}
-            />
-          </li>
-          {#if state["config/sunblock"] === "on" && state["data/forecast"]}
-            <li class={listItemClass}>
-              <Forecast data={state["data/forecast"]} />
-            </li>
-            <li class={listItemClass}>
-              Gebruik weerbericht voor zonblokkering
-              <Switch
-                value={state["config/useweather"]}
-                sendMsg={ createSendMessage("config/useweather")}
-              />
-            </li>
-          {/if}
-        {/if}
-      </ul>
-    </div>
+    <Settings
+      createSendMessage= {createSendMessage}
+      state= {state}
+      controls = {controls}
+      listItemClass= {listItemClass}
+    />
   {/if}
   <footer class="footer">
     <div class="container">

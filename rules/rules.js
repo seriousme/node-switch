@@ -14,10 +14,26 @@ const {
 	location,
 	weerlive,
 	SNS,
-	actionTopics = {},
 	sunblock = {},
 	mqttServer = {},
+	subTopics = {},
+	controls = {},
 } = ConfigJson;
+
+const cIdx = {};
+
+for (const item in controls) {
+	cIdx[item.topic] = item;
+
+	if (item.type === "switch") {
+		item.cmd = `${item.topic}/${subTopics.switchCmd}`;
+		item.status = `${item.topic}/${subTopics.switchStatus}`;
+	}
+	if (item.type === "blind") {
+		item.cmd = `${item.topic}/${subTopics.blindsCmd}`;
+		item.status = `${item.topic}/${subTopics.blindsStatus}`;
+	}
+}
 
 const lastPid = {};
 let batteryMsgs = 0;
@@ -107,10 +123,10 @@ async function handleSunSet() {
 	debug("sunSet");
 	const currentMonth = new Date().getMonth() + 1;
 	await sunWait("sunset", 2220);
-	app.publish("lamp/1/auto", "on");
+	app.publish("lights/1/auto", "on");
 	await sleep(600);
-	app.publish("lamp/2/auto", "on");
-	app.publish("lamp/3/auto", "on");
+	app.publish("lights/2/auto", "on");
+	app.publish("lights/3/auto", "on");
 	await sleep(900);
 	app.publish("blinds/front/auto", "close");
 	await sleep(600);
@@ -123,40 +139,38 @@ async function handleSunSet() {
 }
 
 function handleAuto(req) {
-	if (State.get("config/auto") === "on") {
-		req.topic = req.topic.replace("/auto", "/set");
-		app.publish(req.topic, req.data);
-	}
-}
-
-function handleAutoSet(req) {
-	if (State.get("config/auto") === "on") {
-		req.topic = req.topic.replace("/auto", "/set");
-		app.publish(req.topic, req.data);
+	if (State.get("config/auto/all") === "on") {
+		const topic = req.topic.replace("/auto", "");
+		if (State.get(`config/auto/${topic}` === "on")) {
+			app.publish(topic, req.data);
+		}
 	}
 }
 
 async function handleSwitchSet(req) {
-	const topic = req.topic.replace("/set", "");
-	if (topic === "lamp/all") {
-		app.publish("lamp/1/set", req.data);
-		app.publish("lamp/2/set", req.data);
-		app.publish("lamp/3/set", req.data);
+	const topic = req.topic;
+	if (topic === "lights/all") {
+		app.publish("lights/1", req.data);
+		app.publish("lights/2", req.data);
+		app.publish("lights/3", req.data);
 		return;
 	}
-	State.set(topic, req.data);
-	if (actionTopics[topic]) {
-		app.publish(actionTopics[topic], req.data);
-	} else {
-		deviceSwitch(topic, req.data);
+	const item = cIdx[topic];
+	if (!item) {
+		return;
 	}
-	app.pubRetain(topic, req.data);
+	if (item.model === "kaku") {
+		State.set(item.status, req.data);
+		deviceSwitch(topic, req.data);
+		app.pubRetain(item.status, req.data);
+		return;
+	}
+	app.publish(cIdx[topic].cmd, req.data);
 }
 
 async function handleBlindsSet(req) {
+	const topic = req.topic;
 	debug("handleBlinds");
-
-	const topic = req.topic.replace("/set", "");
 	if (req.data === "sunblock" && sunblock[topic]) {
 		if (
 			topic === "blinds/front" &&
@@ -173,25 +187,26 @@ async function handleBlindsSet(req) {
 			req.data = "open";
 		}
 	}
-
-	if (actionTopics[topic]) {
-		app.publish(actionTopics[topic], req.data);
-		return;
-	}
+	app.publish(cIdx[topic].cmd, req.data);
 }
 
 async function openAllBlinds() {
 	debug("handleBlinds");
-	app.publish("blinds/back/set", "open");
+	app.publish("blinds/back", "open");
 	await sleep(2);
-	app.publish("blinds/side/set", "open");
+	app.publish("blinds/side", "open");
 	await sleep(2);
-	app.publish("blinds/front/set", "open");
+	app.publish("blinds/front", "open");
 }
 
 function toggleButton(topic) {
-	const newState = State.get(topic) === "on" ? "off" : "on";
-	app.publish(`${topic}/set`, newState);
+	const item = cIdx[topic];
+	if (item.model === "kaku") {
+		const newState = State.get(item.status) === "on" ? "off" : "on";
+		app.publish(item.status, newState);
+		return;
+	}
+	app.publish(item.cmd, "toggle");
 }
 
 function handleRemote(req) {
@@ -210,22 +225,17 @@ function handleRemote(req) {
 	}
 
 	if (msg.button[0] === 1) {
-		toggleButton("lamp/1");
+		toggleButton("lights/1");
 	}
 	if (msg.button[1] === 1) {
-		toggleButton("lamp/2");
+		toggleButton("lights/2");
 	}
 	if (msg.button[2] === 1) {
-		toggleButton("lamp/3");
+		toggleButton("lights/3");
 	}
 	if (msg.button[3] === 1) {
 		openAllBlinds();
 	}
-}
-
-function handleStateSet(req) {
-	const topic = req.topic.replace("/set", "");
-	app.pubRetain(topic, req.data);
 }
 
 function handleState(req) {
@@ -252,19 +262,17 @@ async function handleCheckWeatherPi() {
 	}
 }
 
+app.use("lights/+/auto", handleAuto);
+app.use("blinds/+/auto", handleAuto);
+app.use("power/auto", handleAuto);
 app.use("sun/rise", handleSunRise);
 app.use("sun/set", handleSunSet);
-app.use("lamp/+/set", handleSwitchSet);
-app.use("lamp/+/auto", handleAutoSet);
-app.use("power/set", handleSwitchSet);
-app.use("power/auto", handleAutoSet);
-app.use("blinds/+/set", handleBlindsSet);
-app.use("blinds/+/auto", handleAuto);
-app.use("config/+/set", handleStateSet);
+app.use("lights/+", handleSwitchSet);
+app.use("power", handleSwitchSet);
+app.use("blinds/+", handleBlindsSet);
 app.use("config/+", handleState);
-app.use("forecast/get", handleForecast);
-app.use("data/+/set", handleStateSet);
 app.use("data/+", handleState);
+app.use("forecast/get", handleForecast);
 app.use("remote/ble", handleRemote);
 app.use("checkWeatherPi", handleCheckWeatherPi);
 app.listen(mqttServer.URL);
