@@ -17,22 +17,22 @@
 		"cookie": ">= 0.7.0"
 	},
 	"dependencies": {
-		"@aws-sdk/client-sns": "^3.665.0",
+		"@aws-sdk/client-sns": "^3.750.0",
 		"aedes": "^0.51.3",
-		"aedes-persistence-level": "^8.0.1",
+		"aedes-persistence-level": "^9.0.0",
 		"await-spawn": "^4.0.2",
-		"debug": "^4.3.7",
+		"debug": "^4.4.0",
 		"express": "^5.0.1",
-		"level": "^8.0.1",
-		"mqtt": "^5.10.1",
+		"level": "^9.0.0",
+		"mqtt": "^5.10.3",
 		"suncalc": "^1.9.0",
-		"ws": "^8.18.0"
+		"ws": "^8.18.1"
 	},
 	"license": "MIT",
 	"engines": {
 		"node": ">=18"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.3"
+		"@biomejs/biome": "^1.9.4"
 	}
 }
