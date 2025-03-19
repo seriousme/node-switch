@@ -164,9 +164,7 @@ async function handleBlindsSet(req) {
 			isSunnyForecast(21)
 		) {
 			req.data = sunblock[topic];
-		} else {
-			return;
-		}
+		} 
 		if (topic === "blinds/side" && isSunnyForecast()) {
 			req.data = sunblock[topic];
 		} else {
