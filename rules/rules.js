@@ -115,8 +115,8 @@ async function handleSunSet() {
 	app.publish("blinds/front/auto", "close");
 	await sleep(600);
 	app.publish("blinds/side/auto", "close");
-	//from october until end of march
-	if (currentMonth < 4 || currentMonth > 9) {
+	//from october until end of april
+	if (currentMonth < 5 || currentMonth > 9) {
 		await sleep(600);
 		app.publish("blinds/back/auto", "close");
 	}
