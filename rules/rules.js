@@ -94,7 +94,7 @@ function handleSunRise() {
 	})();
 	// side
 	(async () => {
-		if (getSunRiseTime() < "07:00:00") {
+		if (getSunRiseTime() < "06:00:00") {
 			app.publish("blinds/side/auto", "sunblock");
 		} else {
 			await sunWait("sunrise", 1740);
