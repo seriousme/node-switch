@@ -158,17 +158,19 @@ async function handleBlindsSet(req) {
 
 	const topic = req.topic.replace("/set", "");
 	if (req.data === "sunblock" && sunblock[topic]) {
-		if (
-			topic === "blinds/front" &&
-			State.get("config/sunblock") === "on" &&
-			isSunnyForecast(21)
-		) {
-			req.data = sunblock[topic];
-		} 
-		if (topic === "blinds/side" && isSunnyForecast()) {
-			req.data = sunblock[topic];
-		} else {
-			req.data = "open";
+		if (topic === "blinds/front") {
+			if (State.get("config/sunblock") === "on" &&
+				isSunnyForecast(21)
+			) {
+				req.data = sunblock[topic];
+			}
+		}
+		if (topic === "blinds/side") {
+			if (isSunnyForecast()) {
+				req.data = sunblock[topic];
+			} else {
+				req.data = "open";
+			}
 		}
 	}
 
