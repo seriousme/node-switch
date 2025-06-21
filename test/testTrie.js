@@ -15,19 +15,19 @@ const rules = [
 const tests = ["a/b/c", "a/b", "a/c/d/e", "d/e/f", "d/e/f/g", "h", "i", "i/"];
 
 const root = new Trie();
-rules.map((r, i) => {
+rules.map((r) => {
 	console.log("adding", r);
 	root.add(r.split("/"), r);
 });
 
 root.add("d/e/f".split("/"), "blah");
 
-tests.map((t, i) => {
+tests.map((t) => {
 	console.log("lookup", t, "results in", root.match(t.split("/")));
 });
 
 root.remove("d/e/f/g".split("/"), "d/e/f/g");
-tests.map((t, i) => {
+tests.map((t) => {
 	console.log("lookup", t, "results in", root.match(t.split("/")));
 });
 

@@ -1,5 +1,6 @@
 import ConfigJson from "../.config.json" with { type: "json" };
 import { getWeatherInfo } from "../lib/getWeatherInfo.js";
+
 const { weerlive } = ConfigJson;
 console.log(weerlive);
 

@@ -1,11 +1,11 @@
+import Debug from "debug";
 import SunCalc from "suncalc";
 import ConfigJson from "../.config.json" with { type: "json" };
-import mqttRoute from "../lib/mqttRoute.js";
+import { checkWeatherPi } from "../lib/checkWeatherPi.js";
 import { deviceSwitch } from "../lib/deviceSwitch.js";
 import { getWeatherInfo } from "../lib/getWeatherInfo.js";
-import { checkWeatherPi } from "../lib/checkWeatherPi.js";
+import mqttRoute from "../lib/mqttRoute.js";
 import { sns } from "../lib/SNS.js";
-import Debug from "debug";
 
 const debug = Debug("rules");
 debug.enabled = true;
@@ -159,9 +159,7 @@ async function handleBlindsSet(req) {
 	const topic = req.topic.replace("/set", "");
 	if (req.data === "sunblock" && sunblock[topic]) {
 		if (topic === "blinds/front") {
-			if (State.get("config/sunblock") === "on" &&
-				isSunnyForecast(21)
-			) {
+			if (State.get("config/sunblock") === "on" && isSunnyForecast(21)) {
 				req.data = sunblock[topic];
 			}
 		}
@@ -233,7 +231,7 @@ function handleState(req) {
 	State.set(req.topic, req.data);
 }
 
-async function handleForecast(req) {
+async function handleForecast() {
 	const topic = "data/forecast/set";
 	try {
 		const data = await getWeatherInfo(weerlive.location, weerlive.key);

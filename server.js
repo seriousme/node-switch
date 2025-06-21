@@ -1,11 +1,11 @@
-import { createServer as netCreateServer } from "node:net";
 import { createServer as httpCreateServer } from "node:http";
-import Express from "express";
+import { createServer as netCreateServer } from "node:net";
 import Aedes from "aedes";
-import { Level } from "level";
 import aedesPersistencelevel from "aedes-persistence-level";
-import { createWebSocketStream, WebSocketServer } from "ws";
 import Debug from "debug";
+import Express from "express";
+import { Level } from "level";
+import { createWebSocketStream, WebSocketServer } from "ws";
 
 const debug = Debug("mqttServer");
 debug.enabled = true;
@@ -54,9 +54,9 @@ const httpServer = httpCreateServer(app);
 const wss = new WebSocketServer({ server: httpServer });
 
 wss.on("connection", (ws, req) => {
-		const wsStream = createWebSocketStream(ws);
-		aedes.handle(wsStream, req);
-	});
+	const wsStream = createWebSocketStream(ws);
+	aedes.handle(wsStream, req);
+});
 
 // Start the show
 server.listen(mqttPort, () => {

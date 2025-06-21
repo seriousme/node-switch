@@ -39,7 +39,7 @@ class MqttClient {
 		const url = `ws://${window.location.host}`;
 		try {
 			mqttClient = mqtt.connect(url, { clientId });
-		} catch (error) {
+		} catch (_error) {
 			mqttClient = mqttDemo;
 		}
 

@@ -1,4 +1,5 @@
 import { connect } from "../lib/mqttRoute.js";
+
 const client = connect();
 client.on("connect", () => {
 	client.pubRetain("config/auto", "on");
