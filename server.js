@@ -46,17 +46,17 @@ const server = netCreateServer(aedes.handle);
 
 // Config HTTP server
 const app = Express();
-app.use("/mqtt.js", (req, res) => res.sendFile(mqttJS));
+app.use("/mqtt.js", (_req, res) => res.sendFile(mqttJS));
 app.use("/", Express.static(staticSite));
 const httpServer = httpCreateServer(app);
 
 // Config WebSockets server
 const wss = new WebSocketServer({ server: httpServer });
 
-wss.on("connection", function connection(ws, req) {
-	const wsStream = createWebSocketStream(ws);
-	aedes.handle(wsStream, req);
-});
+wss.on("connection", (ws, req) => {
+		const wsStream = createWebSocketStream(ws);
+		aedes.handle(wsStream, req);
+	});
 
 // Start the show
 server.listen(mqttPort, () => {
