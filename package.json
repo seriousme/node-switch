@@ -22,7 +22,7 @@
 	"dependencies": {
 		"@aws-sdk/client-sns": "^3.830.0",
 		"aedes": "^0.51.3",
-		"aedes-persistence-level": "^9.1.0",
+		"aedes-persistence-level": "^9.1.1",
 		"await-spawn": "^4.0.2",
 		"debug": "^4.4.1",
 		"express": "^5.1.0",
