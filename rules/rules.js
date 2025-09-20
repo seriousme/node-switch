@@ -116,7 +116,7 @@ async function handleSunSet() {
 	await sleep(600);
 	app.publish("blinds/side/auto", "close");
 	//from october until end of april
-	if (currentMonth < 5 || currentMonth > 9) {
+	if (getSunRiseTime() > "07:00:00") {
 		await sleep(600);
 		app.publish("blinds/back/auto", "close");
 	}
