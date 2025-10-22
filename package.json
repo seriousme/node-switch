@@ -20,22 +20,22 @@
 		"cookie": ">= 0.7.0"
 	},
 	"dependencies": {
-		"@aws-sdk/client-sns": "^3.830.0",
+		"@aws-sdk/client-sns": "^3.914.0",
 		"aedes": "^0.51.3",
-		"aedes-persistence-level": "^9.1.1",
+		"aedes-persistence-level": "^9.1.2",
 		"await-spawn": "^4.0.2",
-		"debug": "^4.4.1",
+		"debug": "^4.4.3",
 		"express": "^5.1.0",
 		"level": "^10.0.0",
-		"mqtt": "^5.13.1",
+		"mqtt": "^5.14.1",
 		"suncalc": "^1.9.0",
-		"ws": "^8.18.2"
+		"ws": "^8.18.3"
 	},
 	"license": "MIT",
 	"engines": {
 		"node": ">=18"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.0.4"
+		"@biomejs/biome": "^2.2.6"
 	}
 }
