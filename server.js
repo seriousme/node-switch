@@ -1,6 +1,6 @@
 import { createServer as httpCreateServer } from "node:http";
 import { createServer as netCreateServer } from "node:net";
-import Aedes from "aedes";
+import { Aedes } from "aedes";
 import aedesPersistencelevel from "aedes-persistence-level";
 import Debug from "debug";
 import Express from "express";
@@ -18,7 +18,7 @@ const mqttJS = localFile("./node_modules/mqtt/dist/mqtt.min.js");
 
 // Config Aedes MQTT server
 const db = aedesPersistencelevel(new Level("./data"));
-const aedes = Aedes({ persistence: db });
+const aedes = await Aedes.createBroker({ persistence: db });
 aedes.on("publish", (packet, client) => {
 	if (client) {
 		debug(
