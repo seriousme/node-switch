@@ -1,5 +1,4 @@
 <script>
-import {setContext} from "svelte";
 let { data } = $props();
 
 function parseData(data) {
@@ -18,7 +17,7 @@ function parseData(data) {
 		return data;
 	}
 }
-setContext("data",()=>parseData(data));
+data= parseData(data);
 </script>
 
 <table>
