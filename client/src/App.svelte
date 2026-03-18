@@ -15,11 +15,31 @@ function controlsPage() {
 	page = "controls";
 }
 
+function parseForecastData(data) {
+	try {
+		const fdata = JSON.parse(data);
+		const d = new Date(fdata.date);
+		fdata.localeDate = d.toLocaleDateString("nl-NL", {
+			weekday: "long",
+			month: "long",
+			day: "numeric",
+			hour: "numeric",
+			minute: "numeric",
+		});
+		return fdata;
+	} catch (error) {
+		return data;
+	}
+}
+
 const listItemClass =
 	"list-group-item d-flex justify-content-between align-items-center";
 
 const state = $state({});
 const mqttClient = new MqttClient(topics, (topic, value) => {
+  if (topic === "data/forecast") {
+    value = parseForecastData(value);
+  }
 	state[topic] = value;
 });
 
