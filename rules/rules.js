@@ -50,12 +50,6 @@ function isSunnyForecast(minTemp) {
 	return true;
 }
 
-function getSunRiseTime() {
-	return SunCalc.getTimes(new Date(), location.latitude, location.longitude)
-		.sunrise.toTimeString()
-		.split(" ")[0];
-}
-
 async function sunWait(timeType = "sunset", correction = 0) {
 	debug({ timeType, correction });
 
@@ -105,7 +99,7 @@ function handleSunRise() {
 
 async function handleSunSet() {
 	debug("sunSet");
-	const currentMonth = new Date().getMonth() + 1;
+	// const currentMonth = new Date().getMonth() + 1;
 	await sunWait("sunset", 2220);
 	app.publish("lamp/1/auto", "on");
 	await sleep(600);
