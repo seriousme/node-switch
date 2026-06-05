@@ -73,17 +73,21 @@ async function sunWait(timeType = "sunset", correction = 0) {
 	}
 }
 
-function handleSunRise() {
+function handleSunRise(req) {
+	let correction = 0;
+	if (req.data === "now" && State.get("config.holiday" === "on")) {
+		correction = -7200; // wait 2 hours
+	}
 	debug("sunRise");
 	// these get scheduled in parallel
 	// front
 	(async () => {
-		await sunWait("sunrise", 900);
+		await sunWait("sunrise", correction + 900);
 		app.publish("blinds/front/auto", "open");
 	})();
 	// back
 	(async () => {
-		await sunWait("sunrise", 1800);
+		await sunWait("sunrise", correction + 1800);
 		app.publish("blinds/back/auto", "open");
 	})();
 	// side
@@ -99,7 +103,6 @@ function handleSunRise() {
 
 async function handleSunSet() {
 	debug("sunSet");
-	// const currentMonth = new Date().getMonth() + 1;
 	await sunWait("sunset", 2220);
 	app.publish("lamp/1/auto", "on");
 	await sleep(600);
@@ -109,11 +112,9 @@ async function handleSunSet() {
 	app.publish("blinds/front/auto", "close");
 	await sleep(600);
 	app.publish("blinds/side/auto", "close");
-	//from october until end of april
-	// if (getSunRiseTime() > "07:00:00") {
-	await sleep(600);
-	app.publish("blinds/back/auto", "close");
-	//}
+	if (State.get("config/closeback") === "on") {
+		app.publish("blinds/back/auto", "close");
+	}
 }
 
 function handleAuto(req) {

@@ -39,8 +39,11 @@ const controls = [
 const settings = [
 	"data/forecast",
 	"config/auto",
+	"config/closeback",
+	"config/holiday",
 	"config/sunblock",
 	"config/useweather",
 ];
 const topics = controls.map((item) => item.topic).concat(settings);
-export { topics, controls };
+
+export { controls, topics };

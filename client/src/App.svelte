@@ -120,6 +120,20 @@ controlsPage();
         </li>
         {#if state["config/auto"] === "on"}
           <li class={listItemClass}>
+            Vakantie
+            <Switch
+              value={state["config/holiday"]}
+              sendMsg= { createSendMessage("config/holiday")}
+            />
+          </li>
+           <li class={listItemClass}>
+            Luik achter automatisch
+            <Switch
+              value={state["config/closeback"]}
+              sendMsg= { createSendMessage("config/closeback")}
+            />
+          </li>
+          <li class={listItemClass}>
             Automatische zonblokkering
             <Switch
               value={state["config/sunblock"]}
