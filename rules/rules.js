@@ -73,27 +73,26 @@ async function sunWait(timeType = "sunset", correction = 0) {
 	}
 }
 
-function handleSunRise(req) {
-	let correction = 0;
+async function handleSunRise(req) {
 	const isHoliday = State.get("config/holiday");
 	debug("sunRise", {mesg: req.data, isHoliday });
 	if (req.data === "now" && isHoliday) {
-		correction = -7200; // wait 2 hours
+		await sleep(7200) // wait 2 hours
 	}
+	debug("sunRise scheme started");
 	// these get scheduled in parallel
 	// front
 	(async () => {
-		await sunWait("sunrise", correction + 900);
+		await sunWait("sunrise", 900);
 		app.publish("blinds/front/auto", "open");
 	})();
 	// back
 	(async () => {
-		await sunWait("sunrise", correction + 1800);
+		await sunWait("sunrise", 1800);
 		app.publish("blinds/back/auto", "open");
 	})();
 	// side
 	(async () => {
-		await sleep(correction);
 		if (isSunnyForecast(21)) {
 			app.publish("blinds/side/auto", "sunblock");
 		} else {
