@@ -75,9 +75,9 @@ async function sunWait(timeType = "sunset", correction = 0) {
 
 function handleSunRise(req) {
 	let correction = 0;
-	const isHoliday = State.get("config.holiday");
+	const isHoliday = State.get("config/holiday");
 	debug("sunRise", {mesg: req.data, isHoliday });
-	if (req.data === "now" && State.get("config.holiday" === "on")) {
+	if (req.data === "now" && isHoliday) {
 		correction = -7200; // wait 2 hours
 	}
 	// these get scheduled in parallel
