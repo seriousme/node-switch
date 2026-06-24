@@ -54,6 +54,7 @@ async function sunWait(timeType = "sunset", correction = 0) {
 	debug({ timeType, correction });
 
 	const time = getTimes(
+	const time = getTimes(
 		new Date(),
 		location.latitude,
 		location.longitude,
