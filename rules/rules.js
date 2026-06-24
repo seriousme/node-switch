@@ -1,5 +1,5 @@
 import Debug from "debug";
-import SunCalc from "suncalc";
+import { getTimes } from "suncalc";
 import ConfigJson from "../.config.json" with { type: "json" };
 import { checkWeatherPi } from "../lib/checkWeatherPi.js";
 import { deviceSwitch } from "../lib/deviceSwitch.js";
@@ -53,7 +53,7 @@ function isSunnyForecast(minTemp) {
 async function sunWait(timeType = "sunset", correction = 0) {
 	debug({ timeType, correction });
 
-	const time = SunCalc.getTimes(
+	const time = getTimes(
 		new Date(),
 		location.latitude,
 		location.longitude,
@@ -75,7 +75,7 @@ async function sunWait(timeType = "sunset", correction = 0) {
 
 async function handleSunRise(req) {
 	const isHoliday = State.get("config/holiday");
-	debug("sunRise", {mesg: req.data, isHoliday });
+	debug("sunRise", { mesg: req.data, isHoliday });
 	if (req.data === "now" && isHoliday) {
 		await sleep(7200) // wait 2 hours
 	}
