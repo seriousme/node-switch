@@ -1,5 +1,5 @@
 import Debug from "debug";
-import SunCalc from "suncalc";
+import {getTimes} from "suncalc";
 import ConfigJson from "../.config.json" with { type: "json" };
 import { checkWeatherPi } from "../lib/checkWeatherPi.js";
 import { deviceSwitch } from "../lib/deviceSwitch.js";
@@ -53,7 +53,7 @@ function isSunnyForecast(minTemp) {
 async function sunWait(timeType = "sunset", correction = 0) {
 	debug({ timeType, correction });
 
-	const time = SunCalc.getTimes(
+	const time = getTimes(
 		new Date(),
 		location.latitude,
 		location.longitude,
