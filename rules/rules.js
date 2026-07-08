@@ -74,7 +74,7 @@ async function sunWait(timeType = "sunset", correction = 0) {
 }
 
 async function handleSunRise(req) {
-	const isHoliday = State.get("config/holiday");
+	const isHoliday = State.get("config/holiday") === "on";
 	debug("sunRise", { mesg: req.data, isHoliday });
 	if (req.data === "now" && isHoliday) {
 		await sleep(7200) // wait 2 hours
