@@ -37,5 +37,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.9"
+	},
+	"allowScripts": {
+		"classic-level@3.0.0": true
 	}
 }
